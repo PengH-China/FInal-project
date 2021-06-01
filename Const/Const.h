@@ -15,15 +15,16 @@ namespace QS
 {
 	enum class Kind
 	{
-		Self,
-		Monster
+		kSelf,
+		kMonster
 	};
 	enum class BulletShape
 	{
-		Circle,
-		Rectangle
+		kCircle,
+		kRectangle
 	};
-	namespace tag {
+	namespace Name {
+		//使用string而非integer，则后面辨别node则用getName()而非getTag();
 		static const std::string kHero="Hero";
 		static const std::string kMonster="Monster";
 		static const std::string kBullet ="Bullet";

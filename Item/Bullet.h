@@ -54,7 +54,7 @@ public:
 	*/
 	int getDamage();
 protected:
-	Sprite* m_bulletSprite;
+	Sprite* m_pBulletSprite;
 	float m_bulletSpeed;
 	bool m_isArrive;
 	int m_damage;
