@@ -28,11 +28,8 @@ bool MenuHelp::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    Sprite* menuBackground = Sprite::create("menu/background.jpg");
-    menuBackground->setPosition(Vec2(origin.x + visibleSize.width / 2,
-        origin.y + visibleSize.height / 2));
-    this->addChild(menuBackground);
 
+    loadBackgroundPicture(this);//load background picture
 
     MenuItemFont::setFontName("POBG");
     MenuItemFont::setFontSize(86);
@@ -65,18 +62,28 @@ bool MenuHelp::init()
 }
 
 
+void MenuHelp::loadBackgroundPicture(cocos2d::Ref* pSender)
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    Sprite* menuBackground = Sprite::create("menu/background.jpg");
+    menuBackground->setPosition(Vec2(origin.x + visibleSize.width / 2,
+        origin.y + visibleSize.height / 2));
+    Size mywinsize = Director::getInstance()->getWinSize();
+    float winw = mywinsize.width; //获取屏幕宽度
+    float winh = mywinsize.height;//获取屏幕高度
+    float spx = menuBackground->getTextureRect().getMaxX();
+    float spy = menuBackground->getTextureRect().getMaxY();
+    menuBackground->setScaleX(winw / spx); //设置精灵宽度缩放比例
+    menuBackground->setScaleY(winh / spy);
+    this->addChild(menuBackground);
+}
+
+
+
 void MenuHelp::menuCloseCallback(Ref* pSender)
 {
-    //Close the cocos2d-x game scene and quit the application
-
-    //auto mt = MyMenu::createScene();
-    //Director::getInstance()->pushScene(mt);
-
-    /*To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() as given above,instead trigger a custom event created in RootViewController.mm as below*/
-
-    //EventCustom customEndEvent("game_scene_close_event");
-    //_eventDispatcher->dispatchEvent(&customEndEvent);
-
     Director::getInstance()->popScene();
 }
 

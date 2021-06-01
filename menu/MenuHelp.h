@@ -13,6 +13,8 @@ public:
 
     virtual bool init();
 
+    void loadBackgroundPicture(cocos2d::Ref* pSender);
+
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
 

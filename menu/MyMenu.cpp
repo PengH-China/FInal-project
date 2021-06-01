@@ -2,6 +2,7 @@
 #include "MenuSettings.h"
 #include "MenuHelp.h"
 #include "cocos2d.h"
+#include "HomePage.h"
 
 USING_NS_CC;
 
@@ -30,25 +31,63 @@ bool MyMenu::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    Sprite* menuBackground = Sprite::create("menu/background.jpg");
-    menuBackground->setPosition(Vec2(origin.x + visibleSize.width / 2,
-        origin.y + visibleSize.height / 2));
-    this->addChild(menuBackground);
+    MyMenu::loadBackgroundPicture(this);//加载背景图片
 
+    //auto* startItemImage = MenuItemImage::create(
+    //    "button/START-normal.png",
+    //    "button/START-push.png");
+
+    //auto startItem = MenuItemToggle::createWithCallback(
+    //    CC_CALLBACK_1(MyMenu::menuStartCallback, this),
+    //    startItemImage,
+    //    NULL);
+    //startItem->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 4 * 3));
+
+
+
+
+    //auto* settingsItemImage = MenuItemImage::create(
+    //    "button/SETTINGS-normal.png",
+    //    "button/SETTINGS-push.png");
+
+    //auto settingsItem = MenuItemToggle::createWithCallback(
+    //    CC_CALLBACK_1(MyMenu::menuSettingsCallback, this),
+    //    settingsItemImage,
+    //    NULL);
+    //settingsItem->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
+
+
+ 
+
+    //auto* helpItemImage = MenuItemImage::create(
+    //    "button/HELP-normal.png",
+    //    "button/HELP-push.png");
+
+    //auto helpItem = MenuItemToggle::createWithCallback(
+    //    CC_CALLBACK_1(MyMenu::menuHelpCallback, this),
+    //    helpItemImage,
+    //    NULL);
+
+    //helpItem->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 4));
 
     MenuItemFont::setFontName("POBG");
-    MenuItemFont::setFontSize(86);
+    MenuItemFont::setFontSize(250);
 
-    MenuItemFont* item1 = MenuItemFont::create("Start",
-        CC_CALLBACK_1(MyMenu::menuItem1Callback, this));
+    MenuItemFont* startItem = MenuItemFont::create("Start",
+        CC_CALLBACK_1(MyMenu::menuStartCallback, this));
 
-    MenuItemFont* item2 = MenuItemFont::create("Settings",
-        CC_CALLBACK_1(MyMenu::menuItem2Callback, this));
+    MenuItemFont* joinItem = MenuItemFont::create("Join Game",
+        CC_CALLBACK_1(MyMenu::menuJoinGameCallback, this));
 
-    MenuItemFont* item3 = MenuItemFont::create("Help",
-        CC_CALLBACK_1(MyMenu::menuItem3Callback, this));
+    MenuItemFont* settingsItem = MenuItemFont::create("Settings",
+        CC_CALLBACK_1(MyMenu::menuSettingsCallback, this));
 
-    Menu* mn = Menu::create(item1, item2, item3, NULL);
+    MenuItemFont* helpItem = MenuItemFont::create("Help",
+        CC_CALLBACK_1(MyMenu::menuHelpCallback, this));
+
+
+
+    Menu* mn = Menu::create(startItem, joinItem, settingsItem, helpItem, NULL);
     mn->alignItemsVertically();
     this->addChild(mn);
 
@@ -92,14 +131,44 @@ void MyMenu::menuCloseCallback(Ref* pSender)
     _eventDispatcher->dispatchEvent(&customEndEvent);
 }
 
+void MyMenu::loadBackgroundPicture(cocos2d::Ref* pSender)
+{
+    MenuItem* item = (MenuItem*)pSender;
+    log("Touch Background MenuItem %p", item);
 
-void MyMenu::menuItem1Callback(Ref* pSender)
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    Sprite* menuBackground = Sprite::create("menu/MenuBackground.png");
+    menuBackground->setPosition(Vec2(origin.x + visibleSize.width / 2,
+        origin.y + visibleSize.height / 2));
+    Size mywinsize = Director::getInstance()->getWinSize();
+    float winw = mywinsize.width; //获取屏幕宽度
+    float winh = mywinsize.height;//获取屏幕高度
+    float spx = menuBackground->getTextureRect().getMaxX();
+    float spy = menuBackground->getTextureRect().getMaxY();
+    menuBackground->setScaleX(winw / spx); //设置精灵宽度缩放比例
+    menuBackground->setScaleY(winh / spy);
+    this->addChild(menuBackground);
+
+}
+
+
+void MyMenu::menuStartCallback(Ref* pSender)
 {
     MenuItem* item = (MenuItem*)pSender;
     log("Touch Start MenuItem %p", item);
+    auto scene = HomePage::createScene();
+    Director::getInstance()->pushScene(scene);
 }
 
-void MyMenu::menuItem2Callback(Ref* pSender)
+void MyMenu::menuJoinGameCallback(cocos2d::Ref* pSender)
+{
+    MenuItem* item = (MenuItem*)pSender;
+    log("Touch Join Game MenuItem %p", item);
+}
+
+void MyMenu::menuSettingsCallback(Ref* pSender)
 {
     MenuItem* item = (MenuItem*)pSender;
     log("Touch Settings MenuItem %p", item);
@@ -107,7 +176,7 @@ void MyMenu::menuItem2Callback(Ref* pSender)
     Director::getInstance()->pushScene(scene);
 }
 
-void MyMenu::menuItem3Callback(Ref* pSender)
+void MyMenu::menuHelpCallback(Ref* pSender)
 {
     MenuItem* item = (MenuItem*)pSender;
     log("Touch Help MenuItem %p", item);

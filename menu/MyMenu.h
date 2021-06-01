@@ -13,10 +13,13 @@ public:
 
     virtual bool init();
 
-    //three buttons
-    void menuItem1Callback(cocos2d::Ref* pSender);//start
-    void menuItem2Callback(cocos2d::Ref* pSender);//settings
-    void menuItem3Callback(cocos2d::Ref* pSender);//help
+    void loadBackgroundPicture(cocos2d::Ref* pSender);
+
+    //four buttons
+    void menuStartCallback(cocos2d::Ref* pSender);//start
+    void menuJoinGameCallback(cocos2d::Ref* pSender);//join
+    void menuSettingsCallback(cocos2d::Ref* pSender);//settings
+    void menuHelpCallback(cocos2d::Ref* pSender);//help
 
 
     // a selector callback
