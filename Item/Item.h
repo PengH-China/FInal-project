@@ -42,14 +42,14 @@ public:
 	*@brief 修改m_pPresentContactItem
 	*@author 蔡明宏
 	*/
-	//virtual bool onContactBegin(PhysicsContact& contact);
-	//virtual bool onContactSeparate(PhysicsContact& contact);
+	virtual bool onContactBegin(PhysicsContact& contact);
+	virtual bool onContactSeparate(PhysicsContact& contact);
 
 	/**
-	*@brief 设置物理体积
+	*@brief 设置物理体
 	*@author 蔡明宏
 	*/
-	//void generatePhysicalBody(std::string message, const int itemTag);
+	void generatePhysicalBody(std::string message, const std::string itemName);
 
 protected:
 	Sprite* m_pSprite;

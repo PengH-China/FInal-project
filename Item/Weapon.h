@@ -35,37 +35,6 @@ public:
 	* @author:蔡明宏
 	*/
 	bool getState();
-
-	/**
-	*@brief 创造一枚子弹
-	*@author 蔡明宏
-	*/
-	virtual Bullet* createBullet();
-
-	/**
-	*@brief 获取武器发射速度
-	*@author 蔡明宏
-	*/
-	float getInterval();
-
-	/**
-	*@brief 获取武器一次发射几枚子弹
-	*@author 蔡明宏
-	*/
-	int getBulletCount();
-
-	/**
-	*@brief 设置武器发射速度
-	*@author 蔡明宏
-	*/
-	void setInterval(float interval);
-
-	/**
-	*@brief 设置武器一次发射几枚子弹
-	*@author 蔡明宏
-	*/
-	void setBulletCount(int count);
-
 	/**
 	*@brief 与手中武器交换
 	@@author 蔡明宏
@@ -76,8 +45,6 @@ public:
 protected:
 	Sprite* m_pSpriteWeapon = nullptr;
 
-	float m_attackInterval;
-	int m_bulletCount;
 	bool m_isInHand = false;
 	int m_weaponDamage;
 };
