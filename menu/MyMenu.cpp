@@ -1,8 +1,8 @@
 #include "MyMenu.h"
+#include "HomePage.h"
 #include "MenuSettings.h"
 #include "MenuHelp.h"
 #include "cocos2d.h"
-#include "HomePage.h"
 
 USING_NS_CC;
 

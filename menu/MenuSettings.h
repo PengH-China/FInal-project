@@ -16,13 +16,15 @@ public:
 
     virtual bool init();
 
+    //º”‘ÿ±≥æ∞Õº∆¨ load background picture
     void loadBackgroundPicture(cocos2d::Ref* pSender);
 
-    //“Ù–ß
+    //“Ù–ß sound effect
     void menuSoundEffectCallback(cocos2d::Ref* pSender);
-    //±≥æ∞“Ù¿÷
+    //±≥æ∞“Ù¿÷ music
     void menuMusicCallback(cocos2d::Ref* pSender);
 
+    //∑µªÿº¸ back to menu
     void menuBackCallback(cocos2d::Ref* pSender);
 
 

@@ -212,6 +212,7 @@ void HomePage::startGameCallback(cocos2d::Ref* pSender)
 	MenuItem* item = (MenuItem*)pSender;
 	log("Touch start game Item %p", item);
 
+
 }
 
 
