@@ -2,8 +2,8 @@
 
 /**
  * @file   Const.h
- * @brief  ËùÓĞ³£Á¿
- * @author °´ĞèÒª×ÔÖ÷Ìí¼Ó
+ * @brief  æ‰€æœ‰å¸¸é‡
+ * @author æŒ‰éœ€è¦è‡ªä¸»æ·»åŠ 
  */
 
 #ifndef _CONST_H_
@@ -22,15 +22,32 @@ namespace QS
 	};
 	enum class Kind
 	{
-		Self,
-		Monster
+		kSelf,
+		kMonster
 	};
 	enum class BulletShape
 	{
-		Circle,
-		Rectangle
+		kCircle,
+		kRectangle
 	};
-	namespace tag {
+	enum HeroID
+	{
+		kKnight,
+		kAssassin,
+	};
+
+	enum KeyResponse
+	{
+		kRight,
+		kLeft,
+		kUp,
+		kDown,
+		kSkill,
+		kShiftWeapon,
+		kInteract
+	};
+	namespace Name {
+		//ä½¿ç”¨stringè€Œéintegerï¼Œåˆ™åé¢è¾¨åˆ«nodeåˆ™ç”¨getName()è€ŒégetTag();
 		static const std::string kHero="Hero";
 		static const std::string kMonster="Monster";
 		static const std::string kBullet ="Bullet";
@@ -59,7 +76,7 @@ namespace QS
 	}
 	namespace bitMask {
 		/*
-		* @brief ÔİÎ´ÊµÏÖÈËÓëÈËÖ®¼äµÄ¹¥»÷½»»¥£¬Ç°ÃæKind::SelfµÄ¶¨Òå²»Ì«×¼È·£¬»¹ĞèÒª·ÖÀà
+		* @brief æš‚æœªå®ç°äººä¸äººä¹‹é—´çš„æ”»å‡»äº¤äº’ï¼Œå‰é¢Kind::Selfçš„å®šä¹‰ä¸å¤ªå‡†ç¡®ï¼Œè¿˜éœ€è¦åˆ†ç±»
 		*/
 		static const int kHeroCategory = 0x4;
 		static const int kHeroCollision = 0x1;
@@ -89,18 +106,29 @@ namespace QS
 		static const int kMonsterBulletCollision = 0x3;
 		static const int kMonsterBulletContact = 0x7;
 	}
-
-	const char* kSoldier1 = "Soldier/Soldier1.png";
+  namespace message {
+		static const std::string kGunMessage = "Normal Gun\nDamage:1";
+		static const std::string kShotgunMessage = "Shotgun\nDamage:3";
+		static const std::string kSwordMessage = "Sword\nDamage:4";
+		static const std::string kSpearMessage = "Spear\nDamage:5";
+		static const std::string kHealthPotionMessage = "Health Potion\nHP:++2";
+		static const std::string kArmorPotionMessage = "Armor Potion\nArmor:++1";
+		static const std::string kMonsterMessage = "Monster\nHealth:30";
+		static const std::string kMonsterCrawShootMessage = "MonsterCrawShoot\nbackUpDistance:100";
+		static const std::string kMonsterWithGunMessage = "MonsterWithGun\nbackUpDistance:100";
+		static const std::string kMonsterPigMessage = "MonsterPig\ndashSpeed:150\nattackRange:75";
+		static const std::string kMonsterSnowMessage = "MonsterSnow\njumpDistance:50\nattackRange:75";
+		static const std::string kMonsterBossMessage = "Boss\nHealth:300\nattackRange:800\nbackUpDistance:100";
+	}
+  const char* kSoldier1 = "Soldier/Soldier1.png";
 	const char* kSoldier2 = "Soldier/Soldier2.png";
 
 	constexpr int kSoldierHeight = 100;
 	constexpr int kSoldierWidth = 50;
 
 
-
-
-
 }
+
 
 #endif
 

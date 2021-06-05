@@ -21,25 +21,4 @@ void Weapon::setState(bool isInHand)
 	m_pSprite->getPhysicsBody()->setEnabled(!isInHand);
 }
 
-float Weapon::getInterval()
-{
-	return m_attackInterval;
-}
 
-int Weapon::getBulletCount()
-{
-	return m_bulletCount;
-}
-void Weapon::setInterval(float interval)
-{
-	m_attackInterval = interval;
-}
-void Weapon::setBulletCount(int count)
-{
-	m_bulletCount = count;
-}
-
-Bullet* Weapon::createBullet()
-{
-	return nullptr;
-}
