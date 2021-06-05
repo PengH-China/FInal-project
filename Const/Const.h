@@ -49,6 +49,7 @@ namespace QS
 		static const std::string kBarrier ="Barrier";
 		static const std::string kChangeHero="ChangeHero";
 		static const std::string kBulletLayer="BulletLayer";
+		static const std::string kGidTag="Gid"; 
 	}
 	namespace bitMask {
 		/*
