@@ -17,22 +17,27 @@ class Assassin :public Hero
 {
 public:
 	//initialization attribute(初始化属性)
-	Assassin();
-	//warrior action
-	bool moveLeft();
-	bool moveRight();
-	bool moveUp();
-	bool moveDown();
+	CREATE_FUNC(Assassin);
 
-	bool Attack();
+		
+	bool init() override;
+	
+	//float skill() override;
+
+	//void skillEnd() override;
 	int  damageNum() { return m_baseDamage * grade; }
 	//upgrade
 	void upGrade() ;
 
 	const char* roleName();
-protected:
 
-	
+
+protected:
+	Animate* m_pSkillAnimate = nullptr;
+	Animate* m_pSkillTempA = nullptr;
+	Animate* m_pSkillTempB = nullptr;
+
+	float m_speedUP = 1.5;
 
 	static std::string s_roleName;
 };
