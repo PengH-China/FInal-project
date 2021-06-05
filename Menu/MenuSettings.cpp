@@ -1,3 +1,9 @@
+/**
+*@file MenuSettings.cpp
+*@author уевс╨╜
+*@date 5/27/2021
+*/
+
 #include "MenuSettings.h"
 #include "cocos2d.h"
 #include "AudioEngine.h"

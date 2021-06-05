@@ -1,3 +1,9 @@
+/**
+*@file MyMenu.cpp
+*@author уевс╨╜
+*@date 5/27/2021
+*/
+
 #include "MyMenu.h"
 #include "HomePage.h"
 #include "MenuSettings.h"

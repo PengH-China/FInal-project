@@ -1,3 +1,9 @@
+/**
+*@file MyMenu.cpp
+*@author ÕÅ×Óº­
+*@date 5/27/2021
+*/
+
 #include "MyMenu.h"
 #include "HomePage.h"
 #include "MenuSettings.h"
@@ -158,6 +164,7 @@ void MyMenu::menuStartCallback(Ref* pSender)
 {
     MenuItem* item = (MenuItem*)pSender;
     log("Touch Start MenuItem %p", item);
+
     auto scene = HomePage::createScene();
     Director::getInstance()->pushScene(scene);
 }

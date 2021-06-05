@@ -1,3 +1,10 @@
+/**
+*@file HomePage.cpp
+*@author уевс╨╜
+*@date 5/29/2021
+*/
+
+
 #include "HomePage.h"
 #include "cocos2d.h"
 #include "BattleScene.h"

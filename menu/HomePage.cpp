@@ -1,6 +1,13 @@
+/**
+*@file HomePage.cpp
+*@author ÕÅ×Óº­
+*@date 5/29/2021
+*/
+
+
 #include "HomePage.h"
 #include "cocos2d.h"
-
+#include "BattleScene.h"
 
 using namespace cocos2d;
 
@@ -212,7 +219,8 @@ void HomePage::startGameCallback(cocos2d::Ref* pSender)
 	MenuItem* item = (MenuItem*)pSender;
 	log("Touch start game Item %p", item);
 
-
+	auto scene = BattleScene::createScene();
+	Director::getInstance()->pushScene(scene);
 }
 
 
