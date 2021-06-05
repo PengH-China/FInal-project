@@ -13,6 +13,13 @@
 
 namespace QS
 {
+	enum Move
+	{
+		kUp,
+		kDown,
+		kLeft,
+		kRight
+	};
 	enum class Kind
 	{
 		Self,
@@ -82,6 +89,16 @@ namespace QS
 		static const int kMonsterBulletCollision = 0x3;
 		static const int kMonsterBulletContact = 0x7;
 	}
+
+	const char* kSoldier1 = "Soldier/Soldier1.png";
+	const char* kSoldier2 = "Soldier/Soldier2.png";
+
+	constexpr int kSoldierHeight = 100;
+	constexpr int kSoldierWidth = 50;
+
+
+
+
 
 }
 

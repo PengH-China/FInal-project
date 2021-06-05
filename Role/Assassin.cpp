@@ -10,10 +10,31 @@
 
 std::string Assassin::s_roleName = "Assassin";
 
-Assassin::Assassin() {
-	grade  = 1;
-	m_baseDamage = 10;
-	m_health = 100;
+bool Assassin::init()
+{/*
+	if (m_pPresentHero == nullptr)
+	{
+		m_pPresentHero = this;
+		scheduleUpdate();
+		//setMainWeapon(Gun::create());
+		//setSecondWeapon(Spear::create());
+		//m_pSecWeapon->setVisible(false);
+		//m_pMoveAnimate = creatActorAnimate("Actor/assassin_move", 46, 54);
+		//m_pRestAnimate = creatActorAnimate("Actor/assassin_rest", 50, 54);
+		//m_pSkillAnimate = creatActorAnimate("Actor/assassin_skill", 52, 56);
+		//m_pSkillTempA = m_pMoveAnimate;
+		//m_pSkillTempB = m_pRestAnimate;
+		m_maxArmor = 3;
+		m_armor = 3;
+		//m_ID = sk::HeroID::kAssassin;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	*/
+	return true;
 }
 
 const char* Assassin::roleName() {
