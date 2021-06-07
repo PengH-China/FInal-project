@@ -6,14 +6,14 @@
 #ifndef _NORMALGUN_H_
 #define _NORMALGUN_H_
 
-#include "Gun.h"
+#include "Weapon.h"
 #include "NormalBullet.h"
-class NormalGun :public Gun
+class NormalGun :public Weapon
 {
 public:
 	CREATE_FUNC(NormalGun);
 	/**
-	*@brief 创造一枚子弹
+	*@brief 创造子弹
 	*@author 蔡明宏
 	*/
 	Bullet* createBullet() override;
