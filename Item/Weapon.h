@@ -42,11 +42,40 @@ public:
 	void interact() override;
 	//TODO:与地面武器交换
 
+	/**
+	*@brief 设置武器发射速度
+	*@author 蔡明宏
+	*/
+	void setInterval(float interval);
+	/**
+	*@brief 获取武器发射速度
+	*@author 蔡明宏
+	*/
+	float getInterval();
+
+	/**
+	*@brief 获取武器一次发射几枚子弹
+	*@author 蔡明宏
+	*/
+	int getBulletCount();
+	/**
+	*@brief 设置武器一次发射几枚子弹
+	*@author 蔡明宏
+	*/
+	void setBulletCount(int count);
+
+	/**
+	*@brief 创造子弹
+	*@author 蔡明宏
+	*/
+	virtual Bullet* createBullet();
+
 protected:
 	Sprite* m_pSpriteWeapon = nullptr;
-
 	bool m_isInHand = false;
 	int m_weaponDamage;
+	float m_attackInterval;
+	int m_bulletCount;
 };
 
 
