@@ -13,6 +13,13 @@
 
 namespace QS
 {
+	enum Move
+	{
+		kUp,
+		kDown,
+		kLeft,
+		kRight
+	};
 	enum class Kind
 	{
 		kSelf,
@@ -23,24 +30,7 @@ namespace QS
 		kCircle,
 		kRectangle
 	};
-	enum HeroID
-	{
-		kKnight,
-		kAssassin,
-	};
-
-	enum KeyResponse
-	{
-		kRight,
-		kLeft,
-		kUp,
-		kDown,
-		kSkill,
-		kShiftWeapon,
-		kInteract
-	};
 	namespace Name {
-		//使用string而非integer，则后面辨别node则用getName()而非getTag();
 		static const std::string kHero="Hero";
 		static const std::string kMonster="Monster";
 		static const std::string kBullet ="Bullet";
@@ -99,22 +89,18 @@ namespace QS
 		static const int kMonsterBulletCollision = 0x3;
 		static const int kMonsterBulletContact = 0x7;
 	}
-	namespace message {
-		static const std::string kGunMessage = "Normal Gun\nDamage:1";
-		static const std::string kShotgunMessage = "Shotgun\nDamage:3";
-		static const std::string kSwordMessage = "Sword\nDamage:4";
-		static const std::string kSpearMessage = "Spear\nDamage:5";
-		static const std::string kHealthPotionMessage = "Health Potion\nHP:++2";
-		static const std::string kArmorPotionMessage = "Armor Potion\nArmor:++1";
-		static const std::string kMonsterMessage = "Monster\nHealth:30";
-		static const std::string kMonsterCrawShootMessage = "MonsterCrawShoot\nbackUpDistance:100";
-		static const std::string kMonsterWithGunMessage = "MonsterWithGun\nbackUpDistance:100";
-		static const std::string kMonsterPigMessage = "MonsterPig\ndashSpeed:150\nattackRange:75";
-		static const std::string kMonsterSnowMessage = "MonsterSnow\njumpDistance:50\nattackRange:75";
-		static const std::string kMonsterBossMessage = "Boss\nHealth:300\nattackRange:800\nbackUpDistance:100";
-	}
-}
 
+	const char* kSoldier1 = "Soldier/Soldier1.png";
+	const char* kSoldier2 = "Soldier/Soldier2.png";
+
+	constexpr int kSoldierHeight = 100;
+	constexpr int kSoldierWidth = 50;
+
+
+
+
+
+}
 
 #endif
 

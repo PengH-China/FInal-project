@@ -1,3 +1,5 @@
+
+#include "Role/Hero.h"
 #include "SwordBullet.h"
 
 bool SwordBullet::init()
@@ -39,5 +41,41 @@ bool SwordBullet::init()
 
 void SwordBullet::attack(float mouseX, float mouseY, Point heroPoint, int curFacing, Node* sprite = nullptr)
 {
-	
+	/*
+	if (Hero::getInstance() == nullptr)
+		return;
+	if (curFacing == QS::Move::kLeft)
+	{
+		m_pBulletSprite->setFlippedX(true);
+	}
+	//设置方向坐标位置
+	auto point = heroPoint + Vec2((curFacing == QS::Move::kRight ? 15.f : -15.f), 20.f);
+	m_pBulletSprite->setPosition(point);
+
+	auto joint = PhysicsJointFixed::construct(Hero::getInstance()->getPhysicsBody(),
+		m_pBulletSprite->getPhysicsBody(), heroPoint);
+	joint->setCollisionEnable(false);
+	Hero::getInstance()->getScene()->getPhysicsWorld()->addJoint(joint);
+
+	Animation* animation = nullptr;
+	if (curFacing == QS::kRight)
+	{
+		animation = Animation::createWithSpriteFrames(m_rightActionVec);
+	}
+	else
+	{
+		animation = Animation::createWithSpriteFrames(m_leftActionVec);
+	}
+	animation->setLoops(1);
+	animation->setDelayPerUnit(0.1f);
+	Animate* actionOne = Animate::create(animation);
+	auto end = CallFunc::create([&]() {
+		//        getScene()->getPhysicsWorld()->removeJoint(joint);
+		this->removeFromParentAndCleanup(true);
+		});
+	actionOne->retain();
+	auto seq = Sequence::create(actionOne, end, nullptr);
+	m_pBulletSprite->runAction(seq);
+	log("sword attack!");
+	*/
 }
