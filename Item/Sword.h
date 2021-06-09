@@ -9,8 +9,16 @@
 
 #include "Item.h"
 #include "Weapon.h"
-class Sword :public CloseWeapon
+class Sword :public Weapon
 {
+public:
+	CREATE_FUNC(Sword);
+	/**
+	*@brief 创造子弹
+	*@author 蔡明宏
+	*/
+	Bullet* createBullet() override;
 
+	bool init() override;
 };
 #endif // !_SWORD_H_

@@ -42,8 +42,8 @@ public:
 	*@brief 修改m_pPresentContactItem
 	*@author 蔡明宏
 	*/
-	virtual bool onContactBegin(PhysicsContact& contact);
-	virtual bool onContactSeparate(PhysicsContact& contact);
+	//virtual bool onContactBegin(PhysicsContact& contact);
+	//virtual bool onContactSeparate(PhysicsContact& contact);
 
 	/**
 	*@brief 设置物理体
