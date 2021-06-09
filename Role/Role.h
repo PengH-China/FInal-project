@@ -10,12 +10,13 @@
 #define _ROLE_H_
 
 #include "cocos2d.h"
+#include "Const/Const.h"
 USING_NS_CC;
 
-class Role :public cocos2d::Node
+class Role :public cocos2d::Layer
 {
 public:
-
+	
 	/*
 	* An Interface that binds a sprite(warrior)
 	* author peng hao
@@ -27,16 +28,11 @@ public:
 	*/
 	bool genePhysicsBody();
 
-	
-	static Animate* createRoleAnimate(const char* pAnimateName, int width = 64, int height = 60
-		, int frames = 4);
+	//virtual const char* roleName() = 0;
 
-	/*
-	* return the name of role eg.warrior,assassin and so on
-	*/
-	virtual const char* roleName() = 0;
+	//static Layer* createScene();
 protected:
-	Sprite* m_role;//the character
+	Sprite* m_pRole;//the character
 	
 };
 
