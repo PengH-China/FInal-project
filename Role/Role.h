@@ -1,10 +1,3 @@
-/**
-*@file Role.h
-*@author 彭浩(peng hao)
-*@time 2021-05-26
-*/
-
-#pragma once
 
 #ifndef _ROLE_H_
 #define _ROLE_H_
