@@ -1,8 +1,3 @@
-/**
-*@file Role.cpp
-*@author 彭浩(peng hao)
-*@time 2021-05-26
-*/
 
 #include "Role.h"
 #include "Const/Const.h"

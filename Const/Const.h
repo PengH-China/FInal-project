@@ -120,8 +120,8 @@ namespace QS
 		static const std::string kMonsterSnowMessage = "MonsterSnow\njumpDistance:50\nattackRange:75";
 		static const std::string kMonsterBossMessage = "Boss\nHealth:300\nattackRange:800\nbackUpDistance:100";
 	}
-	static const char* kHero1 = "Soldier/Soldier1.png";
-	static const char* kHero2 = "Soldier/Soldier2.png";
+	static const char* kHero1 = "Hero1/Hero1.png";
+	static const char* kHero2 = "Hero2/Hero2.png";
 
 	constexpr int kSoldierHeight = 100;
 	constexpr int kSoldierWidth = 50;

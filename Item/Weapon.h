@@ -39,7 +39,7 @@ public:
 	*@brief 与手中武器交换
 	@@author 蔡明宏
 	*/
-	void interact() override;
+	/*void interact() override;*/
 	//TODO:与地面武器交换
 
 	/**
@@ -68,8 +68,9 @@ public:
 	*@brief 创造子弹
 	*@author 蔡明宏
 	*/
-	virtual Bullet* createBullet();
+	/*virtual Bullet* createBullet();*/
 
+	Sprite* getWeaponSprite();
 protected:
 	Sprite* m_pSpriteWeapon = nullptr;
 	bool m_isInHand = false;
