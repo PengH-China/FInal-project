@@ -1,3 +1,9 @@
+/**
+*@file MenuHelp.cpp
+*@author уевс╨╜
+*@date 5/27/2021
+*/
+
 #include "MenuHelp.h"
 #include "cocos2d.h"
 

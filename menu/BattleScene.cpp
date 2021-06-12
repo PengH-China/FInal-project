@@ -1,3 +1,10 @@
+/**
+*@file BattleScene.cpp
+*@author уевс╨╜
+*@date 6/1/2021
+*/
+
+
 #include "cocos2d.h"
 #include "BattleScene.h"
 

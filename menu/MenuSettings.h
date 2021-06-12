@@ -1,3 +1,9 @@
+/**
+*@file MenuSettings.h
+*@author ÕÅ×Óº­
+*@date 5/27/2021
+*/
+
 #pragma once
 #ifndef __MENUSETTINGS_H__
 #define __MENUSETTINGS_H__
@@ -9,8 +15,7 @@ USING_NS_CC;
 
 class MenuSettings : public cocos2d::Scene
 {
-    bool isEffect = false;
-    bool isMusic = false;
+    
 public:
     static Scene* createScene();
 

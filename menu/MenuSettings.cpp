@@ -1,6 +1,13 @@
+/**
+*@file MenuSettings.cpp
+*@author 张子涵
+*@date 5/27/2021
+*/
+
 #include "MenuSettings.h"
 #include "cocos2d.h"
 #include "AudioEngine.h"
+#include "Const/const.h"
 
 using namespace cocos2d;
 
@@ -113,7 +120,7 @@ bool MenuSettings::init()
 	Menu* mn = Menu::create(soundEffectControlItem, musicControlItem, backMenuItem, NULL);
 	mn->setPosition(Size::ZERO);
 	this->addChild(mn);
-
+	
 
 	return true;
 }
@@ -143,20 +150,19 @@ void MenuSettings::menuSoundEffectCallback(Ref* pSender)
 	auto* soundEffectControlItem = (MenuItemToggle*)pSender;
 	log("soundEffectControlItem %d", soundEffectControlItem->getSelectedIndex());
 
-	if (isEffect) {
-		auto soundEffectID = AudioEngine::play2d("sound/Blip.wav", false);
-		//按键声
-	}
+
 	if (isEffect) //选中状态 Off -> On
 	{
+		auto soundEffectID = AudioEngine::play2d("sound/Blip.mp3", false);//按键声
+		log("soundEffect%d is on", soundEffectID);
 		isEffect = false;
 	}
 	else
 	{
 		isEffect = true;
-		auto soundEffectID = AudioEngine::play2d("sound/Blip.wav", false);
+		auto soundEffectID = AudioEngine::play2d("sound/Blip.mp3", false);//按键声
+		log("soundEffect%d is on", soundEffectID);
 	}
-	
 }
 
 void MenuSettings::menuMusicCallback(Ref* pSender)
@@ -167,23 +173,26 @@ void MenuSettings::menuMusicCallback(Ref* pSender)
 	//读文件内容
 	//auto sharedFileUtils = FileUtils::getInstance();
 	//std::string pathKey = sharedFileUtils->fullPathForFilename("isMusic.txt");
-	
-
+	if (isEffect) {
+		auto soundEffectID = AudioEngine::play2d("sound/Blip.mp3", false);//按键声
+		log("soundEffect%d is on", soundEffectID);
+		//按键声
+	}
 
 	if (isMusic) //选中状态 Off -> On
 	{
 		AudioEngine::stopAll();
+		isMusic = false;
 	}
 	else
 	{
+		isMusic = true;
 		auto backgroundAudioID = AudioEngine::play2d("sound/backgroundMusic.mp3", true);
+		log("music%d is on", backgroundAudioID);
 		//true--->loop
 	}
 
-	if (isEffect) {
-		auto soundEffectID = AudioEngine::play2d("sound/Blip.wav", false);
-		//按键声
-	}
+
 }
 
 void MenuSettings::menuBackCallback(cocos2d::Ref* pSender)

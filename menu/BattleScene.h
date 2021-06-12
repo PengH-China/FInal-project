@@ -1,3 +1,10 @@
+/**
+*@file BattleScene.h
+*@author уевс╨╜
+*@date 6/1/2021
+*/
+
+
 #pragma once
 #ifndef __BATTLESCENE_H__
 #define __BATTLESCENE_H__
