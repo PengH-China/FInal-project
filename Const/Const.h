@@ -11,6 +11,9 @@
 
 #include <string>
 
+bool isEffect = false;
+bool isMusic = false;
+
 namespace QS
 {
 	enum Move
