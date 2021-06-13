@@ -70,6 +70,7 @@ public:
 	*/
 	/*virtual Bullet* createBullet();*/
 
+	
 	Sprite* getWeaponSprite();
 protected:
 	Sprite* m_pSpriteWeapon = nullptr;
@@ -78,6 +79,5 @@ protected:
 	float m_attackInterval;
 	int m_bulletCount;
 };
-
 
 #endif // !_WEAPON_H_

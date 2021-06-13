@@ -1,16 +1,14 @@
 
 #include "Role.h"
-#include "Const/Const.h"
 void Role::bindSprite(Sprite* pSprite) {
-	m_pRole = pSprite;
-	this->addChild(m_pRole);
+	m_sprite = pSprite;
+	this->addChild(m_sprite);
 }
 
 bool Role::genePhysicsBody() {
-
-	auto body = PhysicsBody::createBox(m_pRole->getContentSize());
+	auto body = PhysicsBody::createBox(m_sprite->getContentSize());
 	body->setMass(1e10);
-	body->setPositionOffset(Vec2(0.f, m_pRole->getContentSize().height / 2));
+	body->setPositionOffset(Vec2(0.f, m_sprite->getContentSize().height / 2));
 	body->setGravityEnable(false);
 	body->setRotationEnable(false);
 	body->setCategoryBitmask(QS::bitMask::kHeroCategory);

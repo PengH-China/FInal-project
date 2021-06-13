@@ -23,8 +23,8 @@
  ****************************************************************************/
 
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
-#include "curl/curl.h"
+//#include "HelloWorldScene.h"
+//#include "curl/curl.h"
 //#include "TollgateScene.h"
 #include "BattleScene.h"
 
@@ -111,7 +111,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    auto scene = BattleScene::createScene();
+    TMXTiledMap* BattleMap = TMXTiledMap::create("map1.tmx");
+    auto scene = BattleScene::createScene(BattleMap);
 
     // run
     director->runWithScene(scene);

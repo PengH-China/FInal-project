@@ -10,18 +10,19 @@
 #define __BATTLESCENE_H__
 
 #include "cocos2d.h"
+#include "Const/Const.h"
 
 using namespace cocos2d;
 
 class BattleScene : public cocos2d::Scene
 {
 
-
 public:
-    //BattleScene(TMXTiledMap* map) : m_pMap(map) { };
+    BattleScene(TMXTiledMap* map) : m_pMap(map) { };
     //BattleScene* createWithPhysics();
-    //static BattleScene* create();
-    static Scene* createScene();
+    static BattleScene* create(TMXTiledMap* map);
+
+    static Scene* createScene(TMXTiledMap* map);
 
     virtual bool init();
 
@@ -31,13 +32,14 @@ public:
     void BattleScene::setTiledMap(TMXTiledMap* map);
     //back to menu
     void menuBackCallback(cocos2d::Ref* pSender);
-    //set each gid a tag name
-    void setGidTag();
+
     // implement the "static create()" method manually
-    void addPlayer();
+    void addPlayerAndUI();
 
     void createBarrier();
-    CREATE_FUNC(BattleScene);
+
+    bool onContactBegin(PhysicsContact& contact);
+    //CREATE_FUNC(BattleScene);
 protected:
     TMXTiledMap* m_pMap = nullptr;
     TMXLayer* m_pMeta = nullptr;

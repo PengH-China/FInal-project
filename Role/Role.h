@@ -25,7 +25,7 @@ public:
 
 	//static Layer* createScene();
 protected:
-	Sprite* m_pRole;//the character
+	Sprite* m_sprite;//the character
 	
 };
 

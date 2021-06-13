@@ -8,7 +8,7 @@ bool Sword::init()
     Sprite* pSprite = Sprite::create("item/sword.png");
     m_pSpriteWeapon = pSprite;
     bindSprite(pSprite);
-    //generatePhysicalBody(QS::message::kSwordMessage, QS::Name::kSwordWeapon);
+    generatePhysicalBody(QS::message::kSwordMessage, QS::Name::kSwordWeapon);
     //ÄæÊ±ÕëÐý×ª60¶È
     pSprite->setRotation(-60.f); 
     setInterval(.2f);
