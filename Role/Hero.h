@@ -18,7 +18,7 @@ class Hero : public Role
 {
 public:
 
-	static Hero* createHero(cocos2d::Point position);
+	static Hero* createHero(cocos2d::Point position, std::string pName);
 	void soldierPositionInit(cocos2d::Point position);
 
 	virtual bool init();
@@ -29,17 +29,13 @@ public:
 	Animate* createAnimate(const std::string  pActionName);
 
 	//移动精灵
-	void move(int face, const std::string pAnimateName);
+	virtual void move(int face, const std::string pAnimateName);
 	//键盘事件
 	bool isKeyPressed(EventKeyboard::KeyCode keyCode);
 	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
 	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 	void keyPressedDuration(EventKeyboard::KeyCode code);
-	//鼠标事件
-	void onMouseDown(EventMouse* event);
-	void onMouseUp(EventMouse* event);
-	void onMouseMove(EventMouse* event);
-	bool isMouseMove();
+	
 	//撞墙检测
 	void setHitWall(bool m_isHitWall);
 	bool getIsHitWall();
@@ -58,23 +54,27 @@ public:
 	//获取当前主武器
 	Weapon* getMainWeapon();
 
-	int m_nowFacing;
+	CC_SYNTHESIZE(int, _m_nomFacing, M_nowFacing);
 
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keys;
 
-	std::string m_pHeroSpriteName = "Hero1";
-
+	void setHeroSpriteName(std::string pName);
+	std::string getHeroSpriteName();
 protected:
 
 	static Item* m_pPresentContactItem ;
 
+	std::string m_pHeroSpriteName = "Hero1";
+
 	Sprite* m_pHeroSprite;
 
+
+	
 	//Hero* m_pHero;
-
+	//标定一次移动
+	bool ableToSingleMove = false;
+	//判断是否撞墙
 	bool m_isHitWall=false;
-
-	bool b_isMouseMove;
 	//主武器
 	Weapon* m_pMainWeapon;
 };

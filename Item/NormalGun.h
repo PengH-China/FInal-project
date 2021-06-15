@@ -16,7 +16,7 @@ public:
 	*@brief 创造子弹
 	*@author 蔡明宏
 	*/
-	/*Bullet* createBullet() override;*/
+	Bullet* createBullet() override;
 
 	bool init() override;
 };

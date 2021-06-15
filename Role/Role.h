@@ -19,7 +19,7 @@ public:
 	/*
 	* generate a physics body,and set its nature(性质)
 	*/
-	bool genePhysicsBody();
+	virtual bool genePhysicsBody();
 
 	//virtual const char* roleName() = 0;
 

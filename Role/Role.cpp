@@ -6,16 +6,26 @@ void Role::bindSprite(Sprite* pSprite) {
 }
 
 bool Role::genePhysicsBody() {
-	auto body = PhysicsBody::createBox(m_sprite->getContentSize());
+	auto body = PhysicsBody::createBox(m_sprite->getContentSize(),
+		PhysicsMaterial(1.0f, 1.0f, 0.0f));
 	body->setMass(1e10);
-	body->setPositionOffset(Vec2(0.f, m_sprite->getContentSize().height / 2));
+	//body->setPositionOffset(Vec2(m_sprite->getContentSize().width / 2, m_sprite->getContentSize().height / 2));
 	body->setGravityEnable(false);
 	body->setRotationEnable(false);
-	body->setCategoryBitmask(QS::bitMask::kHeroCategory);
-	body->setCollisionBitmask(QS::bitMask::kHeroCollision);
-	body->setContactTestBitmask(QS::bitMask::kHeroContact);
-	this->setPhysicsBody(body);
+	body->setDynamic(false);
 
-	return 0;
+	//set the body isn't affected by the physics world's gravitational force
+	body->setGravityEnable(false);
+
+	//set initial velocity of physicsBody
+
+
+	body->setCategoryBitmask(1);
+	body->setCollisionBitmask(1);
+	body->setContactTestBitmask(1);
+	m_sprite->setPhysicsBody(body);
+	m_sprite->setTag(1);	
+	//m_sprite->addComponent(body);
+	return true;
 }
 

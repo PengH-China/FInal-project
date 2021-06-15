@@ -68,7 +68,7 @@ public:
 	*@brief 创造子弹
 	*@author 蔡明宏
 	*/
-	/*virtual Bullet* createBullet();*/
+	virtual Bullet* createBullet();
 
 	
 	Sprite* getWeaponSprite();

@@ -10,6 +10,8 @@
 #include "Role/Hero.h"
 //#include "Role/HeroUI.h"
 
+Hero* pHero = nullptr;
+
 using namespace cocos2d;
 cocos2d::Scene* BattleScene::createScene(TMXTiledMap* map)
 {
@@ -17,6 +19,8 @@ cocos2d::Scene* BattleScene::createScene(TMXTiledMap* map)
 	auto layer = BattleScene::create(map);
 	scene->addChild(layer);
 	scene->getPhysicsWorld()->setGravity(Vec2::ZERO);
+	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+
 	return scene;
 }
 BattleScene* BattleScene::create(TMXTiledMap* map)
@@ -35,10 +39,20 @@ BattleScene* BattleScene::create(TMXTiledMap* map)
 	return nullptr;
 }
 
-//cocos2d::Scene* BattleScene::createScene()
-//{
-//	return BattleScene::create();
-//}
+
+void BattleScene::addEdge()
+{
+	auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
+	
+	auto body = PhysicsBody::createEdgeBox(visibleSize, PHYSICSBODY_MATERIAL_DEFAULT, 3);
+	auto edgeShape = Node::create();
+
+	edgeShape->setPhysicsBody(body);
+	edgeShape->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+
+	addChild(edgeShape);
+}
+
 
 // Print useful error message instead of segfaulting when files are not there.
 static void problemLoading(const char* filename)
@@ -51,7 +65,7 @@ static void problemLoading(const char* filename)
 bool BattleScene::init()
 {
 	log("problem2!?");
-	if (!Scene::init())
+	if (!Layer::init())
 	{
 		return false;
 	}
@@ -60,22 +74,82 @@ bool BattleScene::init()
 	Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	//背景图片 background picture
-	BattleScene::loadBackgroundMap(this);
+	BattleScene::loadBackgroundMap(this);//addEdge();
 	BattleScene::addPlayerAndUI();
 	BattleScene::createBarrier();
-	auto contactListener = EventListenerPhysicsContact::create();
-	log("create contactListener");
-	contactListener->onContactBegin = CC_CALLBACK_1(BattleScene::onContactBegin, this);
-	log("CC_CALLBACK_1 IS USING");
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+
+
+	////create a sprite
+	//auto sprite = Sprite::create("player.png");
+	//auto physicsBody = PhysicsBody::createBox(sprite->getContentSize(),
+	//	PhysicsMaterial(0.1f, 1.0f, 0.0f));
+	////physicsBody->setDynamic(false);
+	//sprite->setPosition(Vec2(visibleSize.width/2,visibleSize.height/2));
+	//addChild(sprite);
+	//physicsBody->setGravityEnable(false);
+
+	////set initial velocity of physicsBody
+	//physicsBody->setVelocity(Vec2(cocos2d::random(-500, 500),
+	//	0));
+	//sprite->setTag(3);
+	////apply physicsBody to the sprite
+	//sprite->addComponent(physicsBody);
+
+	////add five dynamic bodies
+	//for (int i = 0; i < 5; ++i)
+	//{
+
+
+	//	sprite = Sprite::create("player.png");
+	//	sprite->setPosition(Vec2(visibleSize.width / 2+ cocos2d::random(-300, 300),
+	//		visibleSize.height / 2  + cocos2d::random(-300, 300)));
+
+	//	physicsBody = PhysicsBody::createBox(sprite->getContentSize(),
+	//		PhysicsMaterial(0.1f, 1.0f, 0.0f));
+
+	//	//set the body isn't affected by the physics world's gravitational force
+	//	physicsBody->setGravityEnable(false);
+
+	//	//set initial velocity of physicsBody
+	//	physicsBody->setVelocity(Vec2(cocos2d::random(-500, 500),
+	//		cocos2d::random(-50, 50)));
+	//	sprite->setTag(3);
+
+	//	sprite->addComponent(physicsBody);
+
+	//	addChild(sprite);
+	//}
+
 
 	return true;
 }
+void  BattleScene::onEnter()
+{
+	Layer::onEnter();
+	//添加监听器 
+	auto contactListener = EventListenerPhysicsContact::create();
+	//设置监听器的碰撞开始函数 
+	contactListener->onContactBegin = CC_CALLBACK_1(BattleScene::onContactBegin, this);
+	//添加到事件分发器中 
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+
+	//鼠标监控
+	auto listenerMouse = EventListenerMouse::create();
+	listenerMouse->onMouseUp = CC_CALLBACK_1(BattleScene::onMouseUp, this);
+	listenerMouse->onMouseDown = CC_CALLBACK_1(BattleScene::onMouseDown, this);
+	listenerMouse->onMouseMove = CC_CALLBACK_1(BattleScene::onMouseMove, this);
+	//注册到场景图中
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerMouse, this);
+}
+
+
+
 void BattleScene::addPlayerAndUI(/*float dt*/) {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	auto* hero = Hero::createHero(Vec2(180, 100));
-
+	auto* hero = Hero::createHero(Vec2(0,0),"Hero1");
+	pHero = hero;
+	hero->retain();
 	if (hero == nullptr)
 	{
 		log("hero picture not found");
@@ -83,7 +157,8 @@ void BattleScene::addPlayerAndUI(/*float dt*/) {
 	else
 	{
 		log("begin init hero");
-		addChild(hero, 4, QS::Name::kHero);
+		hero->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+		addChild(hero, 4);
 		log("end init hero");
 	}
 	//HeroUI* UIboard = HeroUI::create();
@@ -147,20 +222,23 @@ void BattleScene::createBarrier()
 		float width = dict["width"].asFloat();
 		float height = dict["height"].asFloat();
 
-		PhysicsBody* tmpPhysicsBody = PhysicsBody::createBox(Size(width, height));
+		PhysicsBody* tmpPhysicsBody = PhysicsBody::createBox(Size(width, height),
+			PhysicsMaterial(100.0f, 0.0f, 0.0f));
 		tmpPhysicsBody->setDynamic(false);
-		tmpPhysicsBody->setCategoryBitmask(QS::bitMask::kMapCategory);
-		tmpPhysicsBody->setCollisionBitmask(QS::bitMask::kMapCollision);
-		tmpPhysicsBody->setContactTestBitmask(QS::bitMask::kMapContact);
+		tmpPhysicsBody->setCategoryBitmask(1);
+		tmpPhysicsBody->setCollisionBitmask(1);
+		tmpPhysicsBody->setContactTestBitmask(1);
+		tmpPhysicsBody->setGravityEnable(false);
 
 		Sprite* tmpSprite = Sprite::create();
 		tmpSprite->setPosition(Vec2(x, y));
 		tmpSprite->setAnchorPoint(Vec2::ZERO);
 		tmpSprite->setContentSize(Size(width, height));
-		tmpSprite->setPhysicsBody(tmpPhysicsBody);
+		tmpSprite->addComponent(tmpPhysicsBody);
+		tmpSprite->setTag(2);
 		log("%f %f %f %f %d", x, y, width, height,num++);
 		
-		this->addChild(tmpSprite, 2, QS::Name::kBarrier);
+		this->addChild(tmpSprite, 2);
 	}
 }
 
@@ -181,39 +259,67 @@ void BattleScene::setTiledMap(TMXTiledMap* map)
 
 bool BattleScene::onContactBegin(PhysicsContact& contact)
 {
-	auto nodeA = contact.getShapeA()->getBody()->getNode();
-	auto nodeB = contact.getShapeB()->getBody()->getNode();
+	auto nodeA = (contact.getShapeA()->getBody()->getNode());
+	auto nodeB = (contact.getShapeB()->getBody()->getNode());
+	log("fuck off");
 	if (nodeA != nullptr && nodeB != nullptr)
 	{
 		log("test1");
 		if (nodeA && nodeB)
 		{
 			log("test2");
-			log("%s %s", nodeA->getName(), nodeB->getName());
-			if ((nodeA->getName() == QS::Name::kHero && nodeB->getName() == QS::Name::kBarrier)
-				|| (nodeB->getName() == QS::Name::kHero && nodeA->getName() == QS::Name::kBarrier))
+			log("%d %d", nodeA->getTag(), nodeB->getTag());
+			if ((nodeA->getTag() == 1 && nodeB->getTag() == 2)
+				|| (nodeB->getTag() == 1 && nodeA->getTag() == 2))
 			{
-				log("Hit Wall!!!");
-				if (nodeA->getName() == QS::Name::kHero)
+				log("Qiuqiunile");
+				if (nodeA->getTag() == 1)
 				{
-					dynamic_cast<Hero*>(nodeA)->setHitWall(true);
-					auto v = nodeA->getPhysicsBody()->getVelocity();
+					log("enter?");
+					Sprite* pSprite =dynamic_cast<Sprite*>(nodeA); 
+					auto heroCopy = dynamic_cast<Hero*>(pSprite->getParent());
+					
+					heroCopy->setHitWall(true);
+					log("%d %s", heroCopy->getM_nowFacing(), heroCopy->getHeroSpriteName());
+					heroCopy->move(heroCopy->getM_nowFacing(), heroCopy->getHeroSpriteName());
+					/*auto v = nodeA->getPhysicsBody()->getVelocity();
 					v.normalize();
 					nodeA->setPosition(-50 * v);
-					nodeA->getPhysicsBody()->setVelocity(-10 * v);
+					nodeA->getPhysicsBody()->setVelocity(-10 * v);*/
 					return true;
 				}
 				else
 				{
-					dynamic_cast<Hero*>(nodeB)->setHitWall(true);
-					auto v = nodeB->getPhysicsBody()->getVelocity();
+					Sprite* pSprite = dynamic_cast<Sprite*>(nodeB);
+					auto heroCopy = dynamic_cast<Hero*>(pSprite->getParent());
+
+					heroCopy->setHitWall(true);
+					log("%d %s", heroCopy->getM_nowFacing(), heroCopy->getHeroSpriteName());
+					heroCopy->move(heroCopy->getM_nowFacing(), heroCopy->getHeroSpriteName());
+
+			/*		auto v = nodeB->getPhysicsBody()->getVelocity();
 					v.normalize();
 					nodeB->setPosition(-50 * v);
-					nodeB->getPhysicsBody()->setVelocity(-10 * v);
+					nodeB->getPhysicsBody()->setVelocity(-10 * v);*/
 					return true;
 				}
 			}
+			if (((nodeA)->getTag() == 3 && (nodeB)->getTag() == 1)
+				|| ((nodeB)->getTag() == 3 && (nodeA)->getTag() == 1))
+			{
+				log("Qiuqiunima");
+				if (nodeA->getTag() == 3)
+				{
+					nodeA->removeFromParentAndCleanup(true);
+				}
+				else
+				{
+					nodeB->removeFromParentAndCleanup(true);
+				}
+			}
 		}
+		
+	}
 		/*if ((nodeA->getTag() == sk::tag::kHero && nodeB->getTag() == sk::tag::kDoor)
 			|| (nodeB->getTag() == sk::tag::kHero && nodeA->getTag() == sk::tag::kDoor))
 		{
@@ -268,6 +374,80 @@ bool BattleScene::onContactBegin(PhysicsContact& contact)
 				return true;
 			}
 		}*/
-	}
 	return false;
 }
+
+
+bool BattleScene::onMouseDown(EventMouse* e)
+{
+	log("mouseDown");
+	auto curTime = std::clock();
+	if (static_cast<double>(curTime - m_lastShotTime) / CLOCKS_PER_SEC
+		< pHero->getMainWeapon()->getInterval())
+	{
+		return true;
+	}
+	m_lastShotTime = curTime;
+	if (pHero->getMainWeapon()->getBulletCount() == 0)
+	{
+		pHero->getMainWeapon()->getSprite()->setVisible(false);
+		Bullet* pBullet = pHero->getMainWeapon()->createBullet();
+		pBullet->attack(0, 0, pHero->getSprite()->getPosition(), pHero->getM_nowFacing());
+		this->addChild(pBullet, 5);
+		pHero->getMainWeapon()->getSprite()->setVisible(true);
+	}
+	else
+	{
+		for (int i = 0; i < pHero->getMainWeapon()->getBulletCount(); i++)
+		{
+			//人物精灵在场景中的坐标
+			Vec2 heroPos = pHero->getPosition()+ pHero->getSprite()->getPosition();
+			//获取鼠标位置，并修正纵轴位置
+			Vec2 mousePos = e->getLocationInView();
+			//死也不要改这里980
+			mousePos.y += 980;
+			//射击方向
+			Vec2 dire = mousePos - heroPos;
+
+			log("mousePos at: %f, %f", mousePos.x, mousePos.y);
+			log("  Hero at: %f, %f", heroPos.x, heroPos.y);
+			log("  dire at: %f, %f", dire.x, dire.y);
+			Bullet* pBullet = pHero->getMainWeapon()->createBullet();
+			this->addChild(pBullet, 5);
+			pBullet->setPosition(heroPos);
+			pBullet->attack(dire.x, dire.y, heroPos, pHero->getM_nowFacing());
+			
+		}
+	}
+	return true;
+}
+
+void BattleScene::onMouseUp(EventMouse* event)
+{
+	log("mouseUp");
+
+}
+
+
+void BattleScene::onMouseMove(EventMouse* e)
+{
+	//log("mouseMove");
+	////获得openGL的坐标
+	//Vec2 pos = this->convertToNodeSpaceAR(e->getLocation());
+	////注意父节点人物虚拟的是定坐标的，我们操纵的是实物人物精灵图片在计算
+	//Vec2 vecHero = this->convertToNodeSpaceAR(m_pHeroSprite->getPosition());
+	////鼠标相对于人物的位置向量
+	//Vec2 dirTo = pos - vecHero;
+	////武器相对于父节点人物的位置向量
+	//Vec2 dirFrom = this->convertToNodeSpaceAR(this->getMainWeapon()->getPosition());
+	//log("pos x: %d ,y: %d", pos.x, pos.y);
+	//log("vecHero x: %d ,y: %d", vecHero.x, vecHero.y);
+	//log("dirTo x: %d ,y: %d", dirTo.x, dirTo.y);
+	//log("disFrom x: %d ,y: %d", dirFrom.x, dirFrom.y);
+	//Vec2 now = this->getMainWeapon()->getPosition();
+	//0<=jiaodu<=pi
+	/*float jiaodu = angle(dirTo, dirFrom);
+	this->getMainWeapon()->setRotation(jiaodu);*/
+
+}
+

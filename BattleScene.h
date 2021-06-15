@@ -14,7 +14,7 @@
 
 using namespace cocos2d;
 
-class BattleScene : public cocos2d::Scene
+class BattleScene : public cocos2d::Layer
 {
 
 public:
@@ -25,6 +25,10 @@ public:
     static Scene* createScene(TMXTiledMap* map);
 
     virtual bool init();
+
+    void onEnter();
+
+    void addEdge();
 
     //load bakground picture
     void loadBackgroundMap(cocos2d::Ref* pSender);
@@ -39,10 +43,17 @@ public:
     void createBarrier();
 
     bool onContactBegin(PhysicsContact& contact);
+    bool onContactSeparate(PhysicsContact& contact);
+
+    //Êó±êÊÂ¼þ
+    bool onMouseDown(EventMouse* event);
+    void onMouseUp(EventMouse* event);
+    void onMouseMove(EventMouse* event);
     //CREATE_FUNC(BattleScene);
 protected:
     TMXTiledMap* m_pMap = nullptr;
     TMXLayer* m_pMeta = nullptr;
+    clock_t m_lastShotTime;
     //static EventListenerKeyboard* keyBoardListenerOne;
 };
 
