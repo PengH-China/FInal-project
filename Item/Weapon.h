@@ -35,13 +35,18 @@ public:
 	* @author:蔡明宏
 	*/
 	bool getState();
+	/**
+	*@brief 与手中武器交换
+	@@author 蔡明宏
+	*/
+	/*void interact() override;*/
+	//TODO:与地面武器交换
 
 	/**
-	*@brief 创造一枚子弹
+	*@brief 设置武器发射速度
 	*@author 蔡明宏
 	*/
-	virtual Bullet* createBullet();
-
+	void setInterval(float interval);
 	/**
 	*@brief 获取武器发射速度
 	*@author 蔡明宏
@@ -53,13 +58,6 @@ public:
 	*@author 蔡明宏
 	*/
 	int getBulletCount();
-
-	/**
-	*@brief 设置武器发射速度
-	*@author 蔡明宏
-	*/
-	void setInterval(float interval);
-
 	/**
 	*@brief 设置武器一次发射几枚子弹
 	*@author 蔡明宏
@@ -67,20 +65,19 @@ public:
 	void setBulletCount(int count);
 
 	/**
-	*@brief 与手中武器交换
-	@@author 蔡明宏
+	*@brief 创造子弹
+	*@author 蔡明宏
 	*/
-	void interact() override;
-	//TODO:与地面武器交换
+	virtual Bullet* createBullet()=0;
 
+	
+	Sprite* getWeaponSprite();
 protected:
 	Sprite* m_pSpriteWeapon = nullptr;
-
-	float m_attackInterval;
-	int m_bulletCount;
 	bool m_isInHand = false;
 	int m_weaponDamage;
+	float m_attackInterval;
+	int m_bulletCount;
 };
-
 
 #endif // !_WEAPON_H_

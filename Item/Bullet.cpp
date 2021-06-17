@@ -35,15 +35,15 @@ void Bullet::moveEnd()
 void Bullet::bindSprite(Sprite* pSprite, QS::Kind kind, QS::BulletShape shape, std::string name)
 {
     PhysicsBody* body = nullptr;
-    m_bulletSprite = pSprite;
+    m_pBulletSprite = pSprite;
 
     if (shape == QS::BulletShape::kCircle)
     {
-        body = PhysicsBody::createCircle(m_bulletSprite->getContentSize().width / 2);
+        body = PhysicsBody::createCircle(m_pBulletSprite->getContentSize().width / 2);
     }
     else if (shape == QS::BulletShape::kRectangle)
     {
-        body = PhysicsBody::createBox(m_bulletSprite->getContentSize());
+        body = PhysicsBody::createBox(m_pBulletSprite->getContentSize());
     }
 
     if (kind == QS::Kind::kSelf)
@@ -52,7 +52,7 @@ void Bullet::bindSprite(Sprite* pSprite, QS::Kind kind, QS::BulletShape shape, s
         body->setCollisionBitmask(QS::bitMask::kSelfBulletCollision);
         body->setContactTestBitmask(QS::bitMask::kSelfBulletContact);
         body->setRotationEnable(false);
-        m_bulletSprite->setPhysicsBody(body);
+        m_pBulletSprite->setPhysicsBody(body);
     }
     else if (kind == QS::Kind::kMonster)
     {
@@ -60,9 +60,9 @@ void Bullet::bindSprite(Sprite* pSprite, QS::Kind kind, QS::BulletShape shape, s
         body->setCollisionBitmask(QS::bitMask::kMonsterBulletCollision);
         body->setContactTestBitmask(QS::bitMask::kMonsterBulletContact);
         body->setRotationEnable(false);
-        m_bulletSprite->setPhysicsBody(body);
+        m_pBulletSprite->setPhysicsBody(body);
     }
-    this->addChild(m_bulletSprite, 3, name);  
+    this->addChild(m_pBulletSprite, 3, name);  
     //此处tag使用的string形式，且未赋初值，不知道能否使用
 }
 

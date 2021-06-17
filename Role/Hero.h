@@ -1,105 +1,87 @@
 /**
-*@file Hero.h
-*@author å½­æµ©(peng hao)
-*@time 2021-05-28
+*@file Hero.cpp
+*@author ÕÅ×Óº­(Zhang Zihan),²ÌÃ÷ºê,ÅíºÆ(peng hao)
+*@time 2021-06-11
 */
-#pragma once
 
-#ifndef _Hero_H_
-#define _Hero_H_
-#include "Role.h"
+//#pragma once
+#ifndef _HERO_H_
+#define _HERO_H_
+#include "cocos2d.h"
+#include "Role/Role.h"
+#include "Item/NormalGun.h"
+#include "Item/Item.h"
 #include "Const/Const.h"
-#include "Item/Weapon.h"
+USING_NS_CC;
 
-static float gHeroSpeed = 150.;
-static int gHeroDamage = 5;
-
-class Hero :
-    public Role
+class Hero : public Role
 {
 public:
-    //bool init();
 
-    //move
-    void move(int face, const char* pAnimateName,
-              int width = 50, int heigh = 100, int frames = 4);
+	static Hero* createHero(cocos2d::Point position, std::string pName);
+	void soldierPositionInit(cocos2d::Point position);
 
-    //stop move
-    void stopMove();
+	virtual bool init();
+	//CREATE_FUNC(Soldier);
 
-    //keep still
-    void rest();
 
-    //role die
-    void die();
+	//¶¯×÷Éú³É
+	Animate* createAnimate(const std::string  pActionName);
 
-    void dieToStartMenu();
+	//ÒÆ¶¯¾«Áé
+	virtual void move(int face, const std::string pAnimateName);
+	//¼üÅÌÊÂ¼ş
+	bool isKeyPressed(EventKeyboard::KeyCode keyCode);
+	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
+	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
+	void keyPressedDuration(EventKeyboard::KeyCode code);
+	
+	//×²Ç½¼ì²â
+	void setHitWall(bool m_isHitWall);
+	bool getIsHitWall();
+	//Ğı×ª
+	float angle(const Vec2& v1, const Vec2& v2);
+	void rotate(Vec2& point, float angle);
+	void update(float dt = 0.4f);
+	////ÉèÖÃ½»»¥ÎïÆ·
+	//static void setPresentContactItem(Item* pItem);
+	//static Item* getPresentContactItem();
 
-    int getFacing();
+	//»ñµÃµ±Ç°¾«Áé
+	Sprite* getSprite();
+	//ÉèÖÃÖ÷ÎäÆ÷
+	void setMainWeapon(Weapon* pWeapon);
+	//»ñÈ¡µ±Ç°Ö÷ÎäÆ÷
+	Weapon* getMainWeapon();
 
-    Weapon* getMainWeapon();
-    void setMainWeapon(Weapon* pNewWeapon);
-    void setSecondWeapon(Weapon* pNewWeapon);
-    void shiftWeapon();
+	CC_SYNTHESIZE(int, _m_nomFacing, M_nowFacing);
 
-    bool isKeyPressed(EventKeyboard::KeyCode keyCode);
-    void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
-    void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
-    void keyPressedDuration(EventKeyboard::KeyCode code);
+	std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keys;
 
-    void roleMoveUpdate(float dt=0.4f);
+	void setHeroSpriteName(std::string pName);
+	std::string getHeroSpriteName();
 
-    /*
-    void setSpeed(float speed);
-
-    void clearKeyPress();
-    */
-    virtual const char* roleName() = 0;
-    
+	int getCoin()const;
+	void setCoin(int coin);
+	void addCoin(int coin);
+	bool isPickBox();
 protected:
 
-    static Hero* m_pPresentHero;
-    static Item* m_pPresentContactItem;
-    /// æ­¦å™¨
-    Weapon* m_pMainWeapon = nullptr;
-    Weapon* m_pSecWeapon = nullptr;
+	static Item* m_pPresentContactItem ;
 
-    /// åŸºæœ¬åŠ¨ç”»
-    Animate* m_pRestAnimation = nullptr;
-    Animate* m_pMoveAnimation = nullptr;
+	std::string m_pHeroSpriteName = "Hero1";
 
-    //sk::HeroID m_ID;
+	Sprite* m_pHeroSprite;
 
-    bool m_alive = true;
-    float m_speed = gHeroSpeed;
-    int m_health = 5;
-    int m_maxHealth = 5;
-
-    /// åŸºæœ¬å±æ€§
-    //int m_magicPoint;
-    int m_armor = 5;
-    int m_maxArmor = 5;
-    float m_recoverArmorTime = 0;
-    bool m_ifMortal = true;
-    int m_baseDamage = gHeroDamage;
-
-    /// æŠ€èƒ½å±æ€§
-    float m_skillCD = 8.f;       // æŠ€èƒ½å†·å´æ—¶é—´
-    float m_skillTime = m_skillCD; // å½“å‰æŠ€èƒ½å†·å´
-    float m_skillLastTime = 1.;        // æŠ€èƒ½æŒç»­æ—¶é—´
-    float m_skillRemainTime = 0;         // æŠ€èƒ½å‰©ä½™æ—¶é—´
-
-    int m_coinNumber = 0;
-    std::string m_dieFrame;
-
-    /// ç§»åŠ¨çŠ¶æ€
-    bool m_ifMoved = false;
-    bool m_ifStateChanged = false;
-
-    int m_nowFacing = QS::Move::kRight;    //face direction
-
-    // keyboard detection
-    std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keys;
+	int m_icoin;
+	bool m_isPickBox;
+	//Hero* m_pHero;
+	//±ê¶¨Ò»´ÎÒÆ¶¯
+	bool ableToSingleMove = false;
+	//ÅĞ¶ÏÊÇ·ñ×²Ç½
+	bool m_isHitWall=false;
+	//Ö÷ÎäÆ÷
+	Weapon* m_pMainWeapon;
 };
 
-#endif//!_CHARACTER_H_
+#endif//!_Hero_H__

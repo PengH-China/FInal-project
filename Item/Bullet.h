@@ -10,7 +10,7 @@
 
 #include "cocos2d.h"
 #include "Const/Const.h"
-
+#include "Scene/BattleScene.h"
 using namespace cocos2d;
 
 class Bullet :public Node {
@@ -20,7 +20,7 @@ public:
 	*@brief 纯虚函数
 	*@author 蔡明宏
 	*/
-	virtual void attack(float mouseX, float mouseY, Point heroPoint, int curFacing,
+	virtual void attack(float direX, float direY, Point heroPoint, int curFacing,
 		Node* sprite = nullptr) = 0;
 	/**
 	*@brief 获取子弹速度
@@ -54,7 +54,7 @@ public:
 	*/
 	int getDamage();
 protected:
-	Sprite* m_bulletSprite;
+	Sprite* m_pBulletSprite;
 	float m_bulletSpeed;
 	bool m_isArrive;
 	int m_damage;
