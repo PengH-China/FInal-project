@@ -3,6 +3,7 @@
 * @author:²ÌÃ÷ºê
 * @time:2021/5/29
 */
+#pragma once
 
 #ifndef _NORMALBULLET_H_
 #define _NORMALBULLET_H_

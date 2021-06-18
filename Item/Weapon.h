@@ -3,12 +3,13 @@
 *@author 蔡明宏
 *@date 5/28/2021
 */
+#pragma once
 #ifndef _WEAPON_H_
 #define _WEAPON_H_
 
 #include "Bullet.h"
 #include "AudioEngine.h"
-#include "Item.h" 
+#include "Item/Item.h" 
 
 using namespace cocos2d;
 class Weapon :public Item
@@ -68,7 +69,7 @@ public:
 	*@brief 创造子弹
 	*@author 蔡明宏
 	*/
-	virtual Bullet* createBullet()=0;
+	virtual Bullet* createBullet();
 
 	
 	Sprite* getWeaponSprite();

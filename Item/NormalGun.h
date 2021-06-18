@@ -3,6 +3,8 @@
 *@author 蔡明宏
 *@date 6/1/2021
 */
+#pragma once
+
 #ifndef _NORMALGUN_H_
 #define _NORMALGUN_H_
 
@@ -16,7 +18,7 @@ public:
 	*@brief 创造子弹
 	*@author 蔡明宏
 	*/
-	Bullet* createBullet() override ;
+	Bullet* createBullet() override;
 
 	bool init() override;
 };

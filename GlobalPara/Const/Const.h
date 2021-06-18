@@ -128,18 +128,10 @@ namespace QS
 		static const std::string kMonsterPigMessage = "MonsterPig\ndashSpeed:150\nattackRange:75";
 		static const std::string kMonsterSnowMessage = "MonsterSnow\njumpDistance:50\nattackRange:75";
 		static const std::string kMonsterBossMessage = "Boss\nHealth:300\nattackRange:800\nbackUpDistance:100";
-		static const std::string kTreasureMessage = "TreasureBox";
-
 	}
 	static const char* kSoldier1 = "Soldier/Soldier1.png";
 	static const char* kSoldier2 = "Soldier/Soldier2.png";
 
-	static const std::string normalBoxClose = "Item/Box/normalBoxClose.png";
-	static const std::string normalBoxOpen = "Item/Box/normalBoxOpen.png";
-	static const std::string silverBoxClose = "Item/Box/silverBoxClose.png";
-	static const std::string silverBoxOpen = "Item/Box/silverBoxOpen.png";
-	static const std::string goldBoxClose = "Item/Box/goldBoxClose.png";
-	static const std::string goldBoxOpen = "Item/Box/goldBoxOpen.png";
 	constexpr int kSoldierHeight = 100;
 	constexpr int kSoldierWidth = 50;
 

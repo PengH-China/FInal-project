@@ -1,16 +1,14 @@
 /**
 *@file Hero.cpp
-*@author 张子涵(Zhang Zihan),蔡明宏,彭浩(peng hao)
+*@author 张子涵(Zhang Zihan),蔡明宏,彭浩
 *@time 2021-06-11
 */
 
-//#pragma once
+#pragma once
 #ifndef _HERO_H_
 #define _HERO_H_
-#include "cocos2d.h"
 #include "Role/Role.h"
 #include "Item/NormalGun.h"
-#include "Item/Item.h"
 #include "Const/Const.h"
 USING_NS_CC;
 
@@ -35,7 +33,7 @@ public:
 	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
 	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 	void keyPressedDuration(EventKeyboard::KeyCode code);
-	
+
 	//撞墙检测
 	void setHitWall(bool m_isHitWall);
 	bool getIsHitWall();
@@ -61,13 +59,14 @@ public:
 	void setHeroSpriteName(std::string pName);
 	std::string getHeroSpriteName();
 
+
 	int getCoin()const;
 	void setCoin(int coin);
 	void addCoin(int coin);
 	bool isPickBox();
 protected:
 
-	static Item* m_pPresentContactItem ;
+	//static Item* m_pPresentContactItem;
 
 	std::string m_pHeroSpriteName = "Hero1";
 
@@ -75,11 +74,13 @@ protected:
 
 	int m_icoin;
 	bool m_isPickBox;
+
+
 	//Hero* m_pHero;
 	//标定一次移动
 	bool ableToSingleMove = false;
 	//判断是否撞墙
-	bool m_isHitWall=false;
+	bool m_isHitWall = false;
 	//主武器
 	Weapon* m_pMainWeapon;
 };

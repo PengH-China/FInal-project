@@ -1,7 +1,8 @@
 #include "Item.h"
-#include "Role/Hero.h"
+#include "GlobalPara/GlobalParameter.h"
 
 extern Hero* pHero;
+
 void Item::bindSprite(Sprite* pSprite)
 {
     m_pSprite = pSprite;
@@ -35,6 +36,7 @@ void Item::generatePhysicalBody(std::string message, const std::string itemName)
 	contactListener->onContactSeparate = CC_CALLBACK_1(Item::onContactSeparate, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
+
 
 bool Item::isAbleOpen()
 {

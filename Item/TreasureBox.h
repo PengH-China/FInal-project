@@ -1,7 +1,9 @@
+#pragma once
 //author peng hao
 #ifndef _TREASURE_BOX_H_
 #define _TREASURE_BOX_H_
 #include "Item.h"
+#include "cocos2d.h"
 
 class TreasureBox :
     public Item
@@ -9,8 +11,12 @@ class TreasureBox :
 public:
     CREATE_FUNC(TreasureBox);
 
+    TreasureBox* createBox();
+
     bool init()override;
-    void update();
+
+    
+    void openBox();
     void interact();
 
 protected:

@@ -1,11 +1,6 @@
 
 #include "Sword.h"
-//#include "SwordBullet.h"
 
-Bullet* Sword::createBullet()
-{
-    return nullptr;
-}
 
 bool Sword::init()
 {

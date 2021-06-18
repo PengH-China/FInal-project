@@ -4,8 +4,8 @@
 *@time 2021-06-11
 */
 #include "Hero.h"
-
-Item* Hero::m_pPresentContactItem = nullptr;
+#include "GlobalPara/GlobalParameter.h"
+//Item* Hero::m_pPresentContactItem = nullptr;
 
 Hero* Hero::createHero(Point position,std::string pName)
 {
@@ -31,7 +31,7 @@ bool Hero::init()
 	//×¢²á¼üÅÌ¼àÌý
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerKeyboard, this);
 
-	m_icoin = 0;
+	
 
 	setM_nowFacing(3);
 
@@ -301,7 +301,27 @@ void Hero::keyPressedDuration(EventKeyboard::KeyCode code) {
 			break;
 		}
 		case EventKeyboard::KeyCode::KEY_SPACE:{
-			m_isPickBox = true;
+			if (pBox == nullptr) {
+				log("in hero.cpp,the box's pointor is null");
+				break;
+			}
+			else {
+				auto boxPos = pBox->getPosition() + pBox->getSprite()->getPosition();
+				auto heroPos = this->getPosition() + this->getSprite()->getPosition();
+				auto offset = heroPos - boxPos;
+				offset.x < 0 ? offset.x *= (-1.) : true;
+				offset.y < 0 ? offset.y *= (-1.) : true;
+				log("in hero.cpp, offset.x:%f,offset.y:%f", offset.x, offset.y);
+				if (offset.x < 30 && offset.y < 30) {
+					m_isPickBox = true;//only when you are close to the box, and press the space,
+									   //the box would open
+					pBox->openBox();
+					log("you are close enough to open the box");
+				}
+				else {
+					break;
+				}
+			}
 			//move(getM_nowFacing(), m_pHeroSpriteName);
 			//m_nowFacing = -1;
 			break;
@@ -325,25 +345,25 @@ void Hero::move(int face, const std::string pAnimateName) {
 		case QS::kDown: {
 			offsetY = -speedEveryPress;
 			movingAction = createAnimate("Hero/" + pAnimateName + "Down");
-			//log("pMoveAction down end!");
+			log("pMoveAction down end!");
 			break;
 		}
 		case QS::kUp: {
 			offsetY = speedEveryPress;
 			movingAction = createAnimate("Hero/" + pAnimateName + "Up");
-			//log("pMoveAction up end!");
+			log("pMoveAction up end!");
 			break;
 		}
 		case QS::kLeft: {
 			offsetX = -speedEveryPress;
 			movingAction = createAnimate("Hero/" + pAnimateName + "LeftDown");
-			//log("pMoveAction left end!");
+			log("pMoveAction left end!");
 			break;
 		}
 		case QS::kRight: {
 			offsetX = speedEveryPress;
 			movingAction = createAnimate("Hero/" + pAnimateName + "RightDown");
-			//log("pMoveAction right end!");
+			log("pMoveAction right end!");
 			break;
 		}
 		default: {

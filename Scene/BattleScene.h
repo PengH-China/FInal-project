@@ -11,7 +11,9 @@
 
 #include "cocos2d.h"
 #include "Const/Const.h"
-#include "Monster/Monster.h"
+//#include "Role/HeroUI.h"
+#include "Monster/MonsterGroup.h"
+//#include "Item/TreasureBox.h"
 using namespace cocos2d;
 
 class BattleScene : public cocos2d::Layer

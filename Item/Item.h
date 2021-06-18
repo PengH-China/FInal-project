@@ -3,14 +3,14 @@
 *@author 蔡明宏
 *@date 5/28/2021
 */
-
+#pragma once
 #ifndef _ITEM_H_
 #define _ITEM_H_
 
 #include "cocos2d.h"
-#include "Const/Const.h"
 #include "ui/CocosGUI.h"
-
+//#include "Role/Hero.h"
+#include "Const/Const.h"
 
 using namespace cocos2d;
 
@@ -51,7 +51,6 @@ public:
 	*@author 蔡明宏
 	*/
 	void generatePhysicalBody(std::string message, const std::string itemName);
-
 	/**
 	*@brief 是否可打开箱子
 	*@author 彭浩
@@ -66,3 +65,4 @@ protected:
 *@author 蔡明宏
 */
 #endif
+#pragma once

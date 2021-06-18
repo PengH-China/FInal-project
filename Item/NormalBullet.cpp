@@ -18,7 +18,7 @@ void NormalBullet::attack(float direX, float direY, Point heroPoint, int curFaci
 
 bool NormalBullet::init()
 {
-    auto pNormalBullet = Sprite::create("Item/NormalBullet.png");
+    auto pNormalBullet = Sprite::create("NormalBullet.png");
 	if (pNormalBullet == nullptr)
 	{
 		log("NormalBullet.png not found");

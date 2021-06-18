@@ -48,10 +48,11 @@ void Bullet::bindSprite(Sprite* pSprite, QS::Kind kind, QS::BulletShape shape, s
 
     if (kind == QS::Kind::kSelf)
     {
-        body->setCategoryBitmask(QS::bitMask::kSelfBulletCategory);
-        body->setCollisionBitmask(QS::bitMask::kSelfBulletCollision);
-        body->setContactTestBitmask(QS::bitMask::kSelfBulletContact);
+        body->setCategoryBitmask(1);
+        body->setCollisionBitmask(1);
+        body->setContactTestBitmask(1);
         body->setRotationEnable(false);
+        m_pBulletSprite->setTag(QS::kHeroBulletTag);
         m_pBulletSprite->setPhysicsBody(body);
     }
     else if (kind == QS::Kind::kMonster)
@@ -60,6 +61,7 @@ void Bullet::bindSprite(Sprite* pSprite, QS::Kind kind, QS::BulletShape shape, s
         body->setCollisionBitmask(QS::bitMask::kMonsterBulletCollision);
         body->setContactTestBitmask(QS::bitMask::kMonsterBulletContact);
         body->setRotationEnable(false);
+        m_pBulletSprite->setTag(QS::kMonsterBulletTag);
         m_pBulletSprite->setPhysicsBody(body);
     }
     this->addChild(m_pBulletSprite, 3, name);  

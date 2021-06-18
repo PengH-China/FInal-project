@@ -5,10 +5,10 @@ void Weapon::setDamage(int weaponDamage)
 	m_weaponDamage = weaponDamage;
 }
 
-//Bullet* Weapon::createBullet()
-//{
-//	return nullptr;
-//}
+Bullet* Weapon::createBullet()
+{
+	return nullptr;
+}
 int Weapon::getDamage()
 {
 	return m_weaponDamage;
