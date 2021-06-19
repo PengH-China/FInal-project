@@ -11,6 +11,12 @@
 
 #include "cocos2d.h"
 #include "Const/Const.h"
+#include "Role/Hero.h"
+#include "Role/HeroUI.h"
+#include "GlobalPara/GlobalParameter.h"
+#include "Monster/MonsterGroup.h"
+#include <Item/TreasureBox.h>
+
 
 using namespace cocos2d;
 
@@ -41,6 +47,11 @@ public:
     void addPlayerAndUI();
 
     void createBarrier();
+
+    bool addMonster();
+    Monster* createMonsterRand();
+    void addBox();
+
 
     bool onContactBegin(PhysicsContact& contact);
     bool onContactSeparate(PhysicsContact& contact);

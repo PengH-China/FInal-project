@@ -11,8 +11,8 @@ Sprite* Item::getSprite()
     return m_pSprite;
 }
 
-void Item::generatePhysicalBody(std::string message, const std::string itemName) {
-	m_pSprite->setName(itemName);
+void Item::generatePhysicalBody(std::string message, int itemTag) {
+	m_pSprite->setTag(itemTag);
 	//m_pMessage = showMessage(message);
 	//m_pMessage->setVisible(false);
 	//m_pMessage->setPosition(0., 40.);
@@ -23,9 +23,9 @@ void Item::generatePhysicalBody(std::string message, const std::string itemName)
 	auto body = PhysicsBody::createBox(size);
 	body->setDynamic(false);
 	body->setGravityEnable(false);
-	body->setCategoryBitmask(QS::bitMask::kItemCategory);
-	body->setCollisionBitmask(QS::bitMask::kItemCollision);
-	body->setContactTestBitmask(QS::bitMask::kItemContact);
+	body->setCategoryBitmask(1);
+	body->setCollisionBitmask(1);
+	body->setContactTestBitmask(1);
 	m_pSprite->setPhysicsBody(body);
 
 	auto contactListener = EventListenerPhysicsContact::create();

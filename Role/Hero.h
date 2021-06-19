@@ -10,6 +10,7 @@
 #include "cocos2d.h"
 #include "Role/Role.h"
 #include "Item/NormalGun.h"
+#include "Item/Sword.h"
 #include "Item/Item.h"
 #include "Const/Const.h"
 USING_NS_CC;
@@ -55,6 +56,11 @@ public:
 	Weapon* getMainWeapon();
 
 	CC_SYNTHESIZE(int, _m_nomFacing, M_nowFacing);
+
+	CC_SYNTHESIZE(int, m_coinNumber, CoinNumber);
+	CC_SYNTHESIZE(int, m_speed, speed);
+	CC_SYNTHESIZE(int, m_score, Score);
+
 
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keys;
 

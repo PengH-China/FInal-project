@@ -4,11 +4,7 @@
 *@date 6/5/2021
 */
 
-
-#include "cocos2d.h"
 #include "BattleScene.h"
-#include "Role/Hero.h"
-//#include "Role/HeroUI.h"
 
 Hero* pHero = nullptr;
 
@@ -79,46 +75,39 @@ bool BattleScene::init()
 	BattleScene::createBarrier();
 
 
-	////create a sprite
-	//auto sprite = Sprite::create("player.png");
-	//auto physicsBody = PhysicsBody::createBox(sprite->getContentSize(),
-	//	PhysicsMaterial(0.1f, 1.0f, 0.0f));
-	////physicsBody->setDynamic(false);
-	//sprite->setPosition(Vec2(visibleSize.width/2,visibleSize.height/2));
-	//addChild(sprite);
-	//physicsBody->setGravityEnable(false);
-
-	////set initial velocity of physicsBody
-	//physicsBody->setVelocity(Vec2(cocos2d::random(-500, 500),
-	//	0));
-	//sprite->setTag(3);
-	////apply physicsBody to the sprite
-	//sprite->addComponent(physicsBody);
-
-	////add five dynamic bodies
-	//for (int i = 0; i < 5; ++i)
-	//{
+	BattleScene::addMonster();
+	BattleScene::addBox();
 
 
-	//	sprite = Sprite::create("player.png");
-	//	sprite->setPosition(Vec2(visibleSize.width / 2+ cocos2d::random(-300, 300),
-	//		visibleSize.height / 2  + cocos2d::random(-300, 300)));
+	//add five dynamic bodies
+	for (int i = 0; i < 5; ++i)
+	{
 
-	//	physicsBody = PhysicsBody::createBox(sprite->getContentSize(),
-	//		PhysicsMaterial(0.1f, 1.0f, 0.0f));
 
-	//	//set the body isn't affected by the physics world's gravitational force
-	//	physicsBody->setGravityEnable(false);
+		auto sprite = Sprite::create("player.png");
+		sprite->setPosition(Vec2(visibleSize.width / 2+ cocos2d::random(-300, 300),
+			visibleSize.height / 2  + cocos2d::random(-300, 300)));
 
-	//	//set initial velocity of physicsBody
-	//	physicsBody->setVelocity(Vec2(cocos2d::random(-500, 500),
-	//		cocos2d::random(-50, 50)));
-	//	sprite->setTag(3);
+		auto physicsBody = PhysicsBody::createBox(sprite->getContentSize(),
+			PhysicsMaterial(0.1f, 1.0f, 0.0f));
 
-	//	sprite->addComponent(physicsBody);
+		//set the body isn't affected by the physics world's gravitational force
+		physicsBody->setGravityEnable(false);
 
-	//	addChild(sprite);
-	//}
+		//set initial velocity of physicsBody
+		physicsBody->setVelocity(Vec2(0,0));
+
+
+		physicsBody->setCategoryBitmask(1);
+		physicsBody->setCollisionBitmask(1);
+		physicsBody->setContactTestBitmask(1);
+
+		sprite->setTag(QS::kMonsterTag);
+
+		sprite->addComponent(physicsBody);
+
+		addChild(sprite);
+	}
 
 
 	return true;
@@ -147,8 +136,13 @@ void  BattleScene::onEnter()
 void BattleScene::addPlayerAndUI(/*float dt*/) {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	auto* hero = Hero::createHero(Vec2(0,0),"Hero1");
+	auto* hero = Hero::createHero(Vec2(0, 0), "Hero1");
 	pHero = hero;
+	globalHero = hero;
+	log("i try to init the globalHero");
+	if (nullptr != globalHero) {
+		log("and successfully!");
+	}
 	hero->retain();
 	if (hero == nullptr)
 	{
@@ -161,31 +155,83 @@ void BattleScene::addPlayerAndUI(/*float dt*/) {
 		addChild(hero, 4);
 		log("end init hero");
 	}
-	//HeroUI* UIboard = HeroUI::create();
-	//if (UIboard == nullptr)
-	//{
-	//	log("UI picture not found");
-	//}
-	//else
-	//{
-	//	log("begin init UI");
-	//	const Vec2 boardSize = Vec2(600, 214);
-	//	Vec2 boardPosition = Vec2(0, 0);
-	//	boardPosition.x = boardSize.x / 4 + 42;//35;
-	//	boardPosition.y = this->getContentSize().height - boardSize.y / 4 - 15;
-	//	/*log("boardSize.y %f", boardSize.y);
-	//	log("boardSize.x %f", boardSize.x);
-	//	log("x:%f", boardPosition.x);
-	//	log("y:%f", boardPosition.y);*/
-	//	//float spx = BattleMapSprite->getTextureRect().getMaxX();
-	//	//float spy = BattleMapSprite->getTextureRect().getMaxY();
-	//	UIboard->setPosition(boardPosition);
-	//	addChild(UIboard, 5, QS::Name::kHeroUI);
-	//	log("end init UI");
-	//}
+	auto* UIboard = HeroUI::create();
+	if (UIboard == nullptr)
+	{
+		log("UI picture not found");
+	}
+	else
+	{
+		log("begin init UI");
+		const Vec2 boardSize = Vec2(600, 214);
+		Vec2 boardPosition = Vec2(0, 0);
+		boardPosition.x = boardSize.x / 4 + 45;//35;
+		boardPosition.y = this->getContentSize().height - boardSize.y / 4 - 15;
+		/*log("boardSize.y %f", boardSize.y);
+		log("boardSize.x %f", boardSize.x);
+		log("x:%f", boardPosition.x);
+		log("y:%f", boardPosition.y);*/
+		//float spx = BattleMapSprite->getTextureRect().getMaxX();
+		//float spy = BattleMapSprite->getTextureRect().getMaxY();
+		UIboard->setPosition(boardPosition);
+		addChild(UIboard, 5, QS::Name::kHeroUI);
+		log("end init UI");
+	}
 
-	//hero->retain();
+	
 }
+
+bool BattleScene::addMonster()
+{
+
+	MonsterFly* monsterFly = NULL;
+	monsterFly = MonsterFly::createMonster(Vec2(0, 0));
+	monsterFly->retain();
+	if (monsterFly == nullptr)
+	{
+		log("monster picture not found");
+	}
+	else
+	{
+		log("begin init monster");
+		monsterFly->setPosition(Vec2(100, 100));
+		addChild(monsterFly, 4);
+		log("end init monster");
+	}
+	return true;
+}
+
+void BattleScene::addBox()
+{
+	auto box = TreasureBox::create();
+	
+	this->addChild(box, 4, QS::Name::kTreasure);
+}
+
+
+Monster* BattleScene::createMonsterRand()
+{
+	int randNumber = cocos2d::random(1, 4);
+	if (randNumber == 1)
+	{
+		return MonsterFly::create();
+	}
+	else if (randNumber == 2)
+	{
+		//return MonsterPig::create();
+	}
+	else if (randNumber == 3)
+	{
+		//return MonsterCrawShoot::create();
+	}
+	else if (randNumber == 4)
+	{
+		//return MonsterWithGun::create();
+	}
+	return nullptr;
+}
+
+
 void BattleScene::loadBackgroundMap(cocos2d::Ref* pSender)
 {
 	MenuItem* item = (MenuItem*)pSender;
@@ -235,7 +281,7 @@ void BattleScene::createBarrier()
 		tmpSprite->setAnchorPoint(Vec2::ZERO);
 		tmpSprite->setContentSize(Size(width, height));
 		tmpSprite->addComponent(tmpPhysicsBody);
-		tmpSprite->setTag(2);
+		tmpSprite->setTag(QS::kBarrierTag);
 		log("%f %f %f %f %d", x, y, width, height,num++);
 		
 		this->addChild(tmpSprite, 2);
@@ -269,11 +315,13 @@ bool BattleScene::onContactBegin(PhysicsContact& contact)
 		{
 			log("test2");
 			log("%d %d", nodeA->getTag(), nodeB->getTag());
-			if ((nodeA->getTag() == 1 && nodeB->getTag() == 2)
-				|| (nodeB->getTag() == 1 && nodeA->getTag() == 2))
+
+			//Hero punch Barrier
+			if ((nodeA->getTag() == QS::kHeroTag && nodeB->getTag() == QS::kBarrierTag)
+				|| (nodeB->getTag() == QS::kHeroTag && nodeA->getTag() == QS::kBarrierTag))
 			{
 				log("Qiuqiunile");
-				if (nodeA->getTag() == 1)
+				if (nodeA->getTag() == QS::kHeroTag)
 				{
 					log("enter?");
 					Sprite* pSprite =dynamic_cast<Sprite*>(nodeA); 
@@ -282,10 +330,7 @@ bool BattleScene::onContactBegin(PhysicsContact& contact)
 					heroCopy->setHitWall(true);
 					log("%d %s", heroCopy->getM_nowFacing(), heroCopy->getHeroSpriteName());
 					heroCopy->move(heroCopy->getM_nowFacing(), heroCopy->getHeroSpriteName());
-					/*auto v = nodeA->getPhysicsBody()->getVelocity();
-					v.normalize();
-					nodeA->setPosition(-50 * v);
-					nodeA->getPhysicsBody()->setVelocity(-10 * v);*/
+
 					return true;
 				}
 				else
@@ -297,29 +342,130 @@ bool BattleScene::onContactBegin(PhysicsContact& contact)
 					log("%d %s", heroCopy->getM_nowFacing(), heroCopy->getHeroSpriteName());
 					heroCopy->move(heroCopy->getM_nowFacing(), heroCopy->getHeroSpriteName());
 
-			/*		auto v = nodeB->getPhysicsBody()->getVelocity();
-					v.normalize();
-					nodeB->setPosition(-50 * v);
-					nodeB->getPhysicsBody()->setVelocity(-10 * v);*/
 					return true;
 				}
 			}
-			if (((nodeA)->getTag() == 3 && (nodeB)->getTag() == 1)
-				|| ((nodeB)->getTag() == 3 && (nodeA)->getTag() == 1))
+
+			// HeroBullet  punch  Monster
+			else if ((nodeA->getTag() == QS::kHeroBulletTag && nodeB->getTag() == QS::kMonsterTag)
+				|| (nodeB->getTag() == QS::kHeroBulletTag && nodeA->getTag() == QS::kMonsterTag))
 			{
 				log("Qiuqiunima");
-				if (nodeA->getTag() == 3)
+				
+				if (nodeA->getTag() == QS::kHeroBulletTag)
 				{
-					nodeA->removeFromParentAndCleanup(true);
+					nodeA->getParent()->removeFromParent();
+					nodeB->removeFromParent();
+					return true;
 				}
 				else
 				{
-					nodeB->removeFromParentAndCleanup(true);
+					nodeA->removeFromParent();
+					nodeB->getParent()->removeFromParent();
+					return true;
 				}
+			}
+			// MonsterBullet  punch  Hero
+			else if (((nodeA)->getTag() == QS::kHeroTag && (nodeB)->getTag() == QS::kMonsterBulletTag)
+				|| ((nodeB)->getTag() == QS::kHeroTag && (nodeA)->getTag() == QS::kMonsterBulletTag))
+			{
+				log("Qiuqiunima");
+
+				if (nodeA->getTag() == QS::kHeroTag)
+				{
+					nodeA->removeFromParent();
+					nodeB->getParent()->removeFromParent();
+					return true;
+				}
+				else
+				{
+					nodeA->getParent()->removeFromParent();
+					nodeB->removeFromParent();
+					return true;
+				}
+			}
+
+			// HeroBullet  punch  Barrier
+			else if (((nodeA)->getTag() == QS::kHeroBulletTag && (nodeB)->getTag() == QS::kBarrierTag)
+				|| ((nodeB)->getTag() == QS::kHeroBulletTag && (nodeA)->getTag() == QS::kBarrierTag))
+			{
+				log("Qiuqiunima");
+
+				if (nodeA->getTag() == QS::kHeroBulletTag)
+				{
+					nodeA->removeFromParent();
+
+					return true;
+				}
+				else
+				{
+					nodeB->removeFromParent();
+
+					return true;
+				}
+			}
+
+			// MonsterBullet  punch  Barrier
+			else if (((nodeA)->getTag() == QS::kMonsterBulletTag && (nodeB)->getTag() == QS::kBarrierTag)
+				|| ((nodeB)->getTag() == QS::kMonsterBulletTag && (nodeA)->getTag() == QS::kBarrierTag))
+			{
+				log("Qiuqiunima");
+
+				if (nodeA->getTag() == QS::kMonsterBulletTag)
+				{
+					nodeA->removeFromParent();
+
+					return true;
+				}
+				else
+				{
+					nodeB->removeFromParent();
+
+					return true;
+				}
+			}
+
+
+			// HeroSword  punch  Monster
+			else if (((nodeA)->getTag() == QS::kHeroSwordAttackingTag && (nodeB)->getTag() == QS::kMonsterTag)
+			|| ((nodeB)->getTag() == QS::kHeroSwordAttackingTag && (nodeA)->getTag() == QS::kMonsterTag))
+			{
+			log("Qiuqiunima");
+
+			if (nodeA->getTag() == QS::kHeroSwordAttackingTag)
+			{
+				nodeB->removeFromParent();
+
+				return true;
+			}
+			else
+			{
+				nodeA->removeFromParent();
+
+				return true;
+			}
 			}
 		}
 		
 	}
+
+	/*if ((nodeA->getTag() == sk::tag::kMonster && nodeB->getTag() == sk::tag::kBarrier)
+		|| (nodeB->getTag() == sk::tag::kMonster && nodeA->getTag() == sk::tag::kBarrier))
+	{
+		if (nodeA->getTag() == sk::tag::kMonster)
+		{
+			auto v = nodeA->getPhysicsBody()->getVelocity();
+			nodeA->getPhysicsBody()->setVelocity(-v);
+			return true;
+		}
+		else
+		{
+			auto v = nodeB->getPhysicsBody()->getVelocity();
+			nodeB->getPhysicsBody()->setVelocity(-v);
+			return true;
+		}
+	}*/
+
 		/*if ((nodeA->getTag() == sk::tag::kHero && nodeB->getTag() == sk::tag::kDoor)
 			|| (nodeB->getTag() == sk::tag::kHero && nodeA->getTag() == sk::tag::kDoor))
 		{
@@ -358,22 +504,7 @@ bool BattleScene::onContactBegin(PhysicsContact& contact)
 			return true;
 		}*/
 		
-		/*if ((nodeA->getTag() == sk::tag::kMonster && nodeB->getTag() == sk::tag::kBarrier)
-			|| (nodeB->getTag() == sk::tag::kMonster && nodeA->getTag() == sk::tag::kBarrier))
-		{
-			if (nodeA->getTag() == sk::tag::kMonster)
-			{
-				auto v = nodeA->getPhysicsBody()->getVelocity();
-				nodeA->getPhysicsBody()->setVelocity(-v);
-				return true;
-			}
-			else
-			{
-				auto v = nodeB->getPhysicsBody()->getVelocity();
-				nodeB->getPhysicsBody()->setVelocity(-v);
-				return true;
-			}
-		}*/
+	
 	return false;
 }
 
@@ -381,7 +512,7 @@ bool BattleScene::onContactBegin(PhysicsContact& contact)
 bool BattleScene::onMouseDown(EventMouse* e)
 {
 	log("mouseDown");
-	auto curTime = std::clock();
+	auto curTime = clock();
 	if (static_cast<double>(curTime - m_lastShotTime) / CLOCKS_PER_SEC
 		< pHero->getMainWeapon()->getInterval())
 	{
@@ -392,13 +523,13 @@ bool BattleScene::onMouseDown(EventMouse* e)
 	{
 		pHero->getMainWeapon()->getSprite()->setVisible(false);
 		Bullet* pBullet = pHero->getMainWeapon()->createBullet();
-		pBullet->attack(0, 0, pHero->getSprite()->getPosition(), pHero->getM_nowFacing());
-		this->addChild(pBullet, 5);
+		//pBullet->attack(0, 0, pHero->getSprite()->getPosition(), pHero->getM_nowFacing());
+		//this->addChild(pBullet, 5);
 		pHero->getMainWeapon()->getSprite()->setVisible(true);
 	}
 	else
 	{
-		for (int i = 0; i < pHero->getMainWeapon()->getBulletCount(); i++)
+		for (int i = 1; i < pHero->getMainWeapon()->getBulletCount(); i++)
 		{
 			//人物精灵在场景中的坐标
 			Vec2 heroPos = pHero->getPosition()+ pHero->getSprite()->getPosition();

@@ -13,11 +13,12 @@ bool NormalGun::init() {
 	{
 		log("weapons.png not found");
 	}
+	m_pSpriteWeapon = pSprite;
 	bindSprite(pSprite);
 	pSprite->setScale(.4f);
 	pSprite->setAnchorPoint(Vec2(0.5f, 0.5f));
 	pSprite->setPosition(0, 0);
-	generatePhysicalBody(QS::message::kGunMessage, QS::Name::kGunWeapon);
+	generatePhysicalBody(QS::message::kGunMessage,QS::kHeroSwordRestingTag);
 	setDamage(1);
 	setInterval(.2f);
 	setBulletCount(2);

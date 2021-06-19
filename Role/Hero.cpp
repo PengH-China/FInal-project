@@ -35,6 +35,19 @@ bool Hero::init()
 
 	setM_nowFacing(3);
 
+
+
+	setHealth(10);
+	setMaxHealth(10);
+	setArmor(3);
+	setMaxArmor(10);
+	setFirePower(10);
+	setMaxFirePower(10);
+	setCoinNumber(0);
+	setspeed(2);
+	setScore(0);
+
+
 	this->scheduleUpdate();
 
 	if (!Layer::init())
@@ -120,7 +133,7 @@ void Hero::soldierPositionInit(cocos2d::Point position)
 	/*m_pHeroSprite->setPosition(Vec2(100,100));*/
 	
 	
-	NormalGun* weapon = NormalGun::create();
+	auto* weapon = Sword::create();
 	if (weapon == nullptr) {
 		log("the weapon can't be created");
 	}
@@ -130,8 +143,8 @@ void Hero::setMainWeapon(Weapon* pWeapon)
 {
 	this->m_pHeroSprite->addChild(pWeapon, 2);
 	pWeapon->setState(true);
-	pWeapon->setAnchorPoint(Vec2(0,0.5));
-	pWeapon->setPosition(Point(20,12));
+	pWeapon->setAnchorPoint(Vec2(0,0));
+	pWeapon->setPosition(Point((m_pHeroSprite->getContentSize()) / 2));
 	/*auto w = m_pHeroSprite->getContentSize().width;
 	auto h = m_pHeroSprite->getContentSize().height;
 	pWeapon->setPosition(w/2,h/2);*/
@@ -210,11 +223,17 @@ void Hero::update(float dt ) {//detect every seconds what have done
 	if ((isKeyPressed(leftArrow) || isKeyPressed(leftA))&& ableToSingleMove) {
 		log("Left!!");
 		keyPressedDuration(leftArrow);
+		//getMainWeapon()->setPosition(Vec2(2, 12));
+		getMainWeapon()->getWeaponSprite()->setFlippedX(true);
+		getMainWeapon()->getWeaponSprite()->setFlippedY(false);
 		ableToSingleMove = false;
 		return;
 	}
 	else if ((isKeyPressed(rightArrow) || isKeyPressed(rightD)) && ableToSingleMove) {
 		keyPressedDuration(rightArrow);
+		//getMainWeapon()->setPosition(Vec2(22, 22));
+		getMainWeapon()->getWeaponSprite()->setFlippedX(false);
+		getMainWeapon()->getWeaponSprite()->setFlippedY(false);
 		log("Right!!");
 		ableToSingleMove = false;
 		return;

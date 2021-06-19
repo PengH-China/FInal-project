@@ -21,7 +21,13 @@ public:
 	*/
 	virtual bool genePhysicsBody();
 
-	//virtual const char* roleName() = 0;
+	
+	CC_SYNTHESIZE(int, m_health, Health);
+	CC_SYNTHESIZE(int, m_maxHealth, MaxHealth);
+	CC_SYNTHESIZE(int, m_armor, Armor);
+	CC_SYNTHESIZE(int, m_maxArmor, MaxArmor);
+	CC_SYNTHESIZE(int, m_firePower, FirePower);
+	CC_SYNTHESIZE(int, m_maxFirePower, MaxFirePower);
 
 	//static Layer* createScene();
 protected:

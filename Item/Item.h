@@ -50,7 +50,7 @@ public:
 	*@brief 设置物理体
 	*@author 蔡明宏
 	*/
-	void generatePhysicalBody(std::string message, const std::string itemName);
+	void generatePhysicalBody(std::string message, int itemTag);
 
 protected:
 	Sprite* m_pSprite;

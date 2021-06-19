@@ -26,7 +26,7 @@
 //#include "HelloWorldScene.h"
 //#include "curl/curl.h"
 //#include "TollgateScene.h"
-#include "BattleScene.h"
+#include "Menu/MyMenu.h"
 
  // #define USE_AUDIO_ENGINE 1
 
@@ -111,8 +111,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    TMXTiledMap* BattleMap = TMXTiledMap::create("map1.tmx");
-    auto scene = BattleScene::createScene(BattleMap);
+   // TMXTiledMap* BattleMap = TMXTiledMap::create("map1.tmx");
+    auto scene = MyMenu::createScene();
 
     // run
     director->runWithScene(scene);

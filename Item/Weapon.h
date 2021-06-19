@@ -8,7 +8,7 @@
 
 #include "Bullet.h"
 #include "AudioEngine.h"
-#include "Item.h" 
+#include "Item/Item.h" 
 
 using namespace cocos2d;
 class Weapon :public Item

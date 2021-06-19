@@ -24,7 +24,7 @@ bool Role::genePhysicsBody() {
 	body->setCollisionBitmask(1);
 	body->setContactTestBitmask(1);
 	m_sprite->setPhysicsBody(body);
-	m_sprite->setTag(1);	
+	m_sprite->setTag(QS::kHeroTag);
 	//m_sprite->addComponent(body);
 	return true;
 }
