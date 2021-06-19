@@ -1,47 +1,101 @@
 #include "Weapon.h"
-
-void Weapon::setDamage(int weaponDamage)
-{
-	m_weaponDamage = weaponDamage;
-}
+#include "Role/Hero.h"
+extern Hero* pHero;
 
 Bullet* Weapon::createBullet()
 {
 	return nullptr;
 }
-int Weapon::getDamage()
+
+void Weapon::update(float dt)
 {
-	return m_weaponDamage;
+	log("update Weapon");
+	auto pickBox = EventKeyboard::KeyCode::KEY_E;
+	if (isKeyPressed(pickBox)) {
+		log("Your weapon's keycode are OK");
+		if (pHero == nullptr) {
+			log("in treasure.cpp,the hero's pointor is null");
+			return;
+		}
+		else {
+			if (false == this->getState())
+			{
+				auto weaponPos = this->getPosition();
+				auto heroPos = pHero->getPosition() + pHero->getSprite()->getPosition();
+				auto offset = weaponPos - heroPos;
+				(offset.x < 0.f) ? (offset.x *= (-1)) : true;
+				(offset.y < 0.f) ? (offset.y *= (-1)) : true;
+				if (offset.x < 50 && offset.y < 50) {
+					//only when you are close to the box, and press the space,
+					 //the box would open
+					interact();
+					log("finish interact");
+				}
+			}
+		}
+	}
 }
-bool Weapon::getState()
-{
-	return m_isInHand;
-}
-void Weapon::setState(bool isInHand)
-{
-	//存疑，需要看接口，此方法不一定好
-	m_isInHand = isInHand;
-	//在被持有的时候不启用模拟，在没被持有则有世界模拟
-	//m_pSprite->getPhysicsBody()->setEnabled(!isInHand);
-}
-void  Weapon::setInterval(float interval)
-{
-	m_attackInterval = interval;
-}
-float  Weapon::getInterval()
-{
-	return m_attackInterval;
-}
-int  Weapon::getBulletCount()
-{
-	return m_bulletCount;
-}
-void  Weapon::setBulletCount(int count)
-{
-	m_bulletCount = count;
-}
+
 Sprite* Weapon::getWeaponSprite()
 {
 	return m_pSpriteWeapon;
 }
+
+void Weapon::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* events) {
+	log("Weapon Pressed! %d", int(keyCode));
+	m_keys[keyCode] = true;
+}
+
+void Weapon::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* events) {
+	log("Weapon Unpressed! %d", int(keyCode));
+	m_keys[keyCode] = false;
+}
+
+bool Weapon::isKeyPressed(EventKeyboard::KeyCode keyCode) {
+	if (m_keys[keyCode]) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+void Weapon::interact()
+{
+	auto floorWeapon = pHero->getMainWeapon();
+	auto bulletCount = pHero->getMainWeapon()->getBulletCount();
+	//没有立即add又想使用，则要retain()
+	floorWeapon->retain();
+	floorWeapon->removeFromParent();
+	//floorWeapon->setPosition(Point(this->getPosition()));
+	floorWeapon->setState(false);
+	//pHero->getParent()->addChild(floorWeapon,2);
+	if (QS::Name::kShotgunWeapon == floorWeapon->getWeaponName()) {
+		auto pNewWeapon = ShotGun::create();
+		this->getParent()->addChild(pNewWeapon);
+		pNewWeapon->setPosition(this->getPosition());
+		pNewWeapon->setScale(2.0f);
+		pNewWeapon->setBulletCount(bulletCount);
+	}
+	else if (QS::Name::kNormalGunWeapon == floorWeapon->getWeaponName()) {
+		auto pNewWeapon = NormalGun::create();
+		this->getParent()->addChild(pNewWeapon);
+		pNewWeapon->setPosition(this->getPosition());
+		pNewWeapon->setScale(2.0f);
+		pNewWeapon->setBulletCount(bulletCount);
+	}
+	else if (QS::Name::kSwordWeapon == floorWeapon->getWeaponName()) {
+		auto pNewWeapon = Sword::create();
+		this->getParent()->addChild(pNewWeapon);
+		pNewWeapon->setPosition(this->getPosition());
+		pNewWeapon->setScale(2.0f);
+		pNewWeapon->setBulletCount(bulletCount);
+	}
+	this->retain();
+	this->removeFromParent();
+	pHero->setMainWeapon(this);
+	log("weapon changed %d",this);
+	/*if (gIsEffectPlaying)
+		AudioEngine::play2d(sk::files::kWeaponPickup);*/
+}
+
 

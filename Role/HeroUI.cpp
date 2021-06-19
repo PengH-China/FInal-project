@@ -87,7 +87,6 @@ bool HeroUI::init()
 
 	schedule(CC_SCHEDULE_SELECTOR(HeroUI::scheduleUpdateUI), 0.1f);
 
-
 	return true;
 }
 

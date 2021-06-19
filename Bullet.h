@@ -10,7 +10,7 @@
 
 #include "cocos2d.h"
 #include "Const/Const.h"
-//#include "BattleScene.h"
+
 using namespace cocos2d;
 
 class Bullet :public Node {

@@ -32,10 +32,7 @@ bool Hero::init()
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerKeyboard, this);
 
 	
-
 	setM_nowFacing(3);
-
-
 
 	setHealth(10);
 	setMaxHealth(10);
@@ -46,7 +43,6 @@ bool Hero::init()
 	setCoinNumber(0);
 	setspeed(2);
 	setScore(0);
-
 
 	this->scheduleUpdate();
 
@@ -89,39 +85,6 @@ bool Hero::isKeyPressed(EventKeyboard::KeyCode keyCode) {
 }
 
 
-//返回两个向量的夹角
-float Hero::angle(const Vec2& v1, const Vec2& v2)
-{
-	float dz = v1.x * v2.y - v1.y * v2.x;
-	return atan2f(fabsf(dz) + MATH_FLOAT_SMALL, Vec2::dot(v1, v2));
-}
-//以指定的点point旋转angle角（以线段的锚点为中心旋转）
-void Hero::rotate(Vec2& point, float angle)
-{
-	float sinAngle = std::sin(angle);
-	float cosAngle = std::cos(angle);
-	auto x = point.x;
-	auto y = point.y;
-	//如果旋转点为（0，0）点
-	if (point.isZero())
-	{
-		float tempX = x * cosAngle - y * sinAngle;
-		y = y * cosAngle + x * sinAngle;
-		x = tempX;
-	}
-	//旋转点不在原点
-	else
-	{
-		//先移动到原点
-		float tempX = x - point.x;
-		float tempY = y - point.y;
-
-		//旋转完再移动回去
-		x = tempX * cosAngle - tempY * sinAngle + point.x;
-		y = tempY * cosAngle + tempX * sinAngle + point.y;
-	}
-}
-
 void Hero::soldierPositionInit(cocos2d::Point position)
 {
 	m_pHeroSprite = Sprite::create("Hero/" + m_pHeroSpriteName + ".png");
@@ -133,7 +96,7 @@ void Hero::soldierPositionInit(cocos2d::Point position)
 	/*m_pHeroSprite->setPosition(Vec2(100,100));*/
 	
 	
-	auto* weapon = Sword::create();
+	auto* weapon = ShotGun::create();
 	if (weapon == nullptr) {
 		log("the weapon can't be created");
 	}
@@ -141,6 +104,7 @@ void Hero::soldierPositionInit(cocos2d::Point position)
 }
 void Hero::setMainWeapon(Weapon* pWeapon)
 {
+	//武器是人物精灵的子节点
 	this->m_pHeroSprite->addChild(pWeapon, 2);
 	pWeapon->setState(true);
 	pWeapon->setAnchorPoint(Vec2(0,0));
@@ -156,6 +120,20 @@ void Hero::setMainWeapon(Weapon* pWeapon)
 Weapon* Hero::getMainWeapon()
 {
 	return m_pMainWeapon;
+}
+void Hero::throwMainWeapon()
+{
+	auto floorWeapon = this->getMainWeapon();
+	floorWeapon->retain();
+	floorWeapon->removeFromParent();
+	floorWeapon->setPosition(this->getPosition()+this->getSprite()->getPosition());
+	floorWeapon->setState(false);
+	
+	this->getParent()->addChild(floorWeapon, 3);
+	floorWeapon->setScale(3.0f, 3.0f);
+	//人物当前主武器的状态的置零
+	m_pMainWeapon = nullptr;
+	
 }
 Sprite* Hero::getSprite()
 {
@@ -224,16 +202,30 @@ void Hero::update(float dt ) {//detect every seconds what have done
 		log("Left!!");
 		keyPressedDuration(leftArrow);
 		//getMainWeapon()->setPosition(Vec2(2, 12));
-		getMainWeapon()->getWeaponSprite()->setFlippedX(true);
-		getMainWeapon()->getWeaponSprite()->setFlippedY(false);
+		if (getMainWeapon()== nullptr)
+		{
+			log("Weapon's Sprite is null now");
+		}
+		else
+		{
+			getMainWeapon()->getWeaponSprite()->setFlippedX(true);
+			getMainWeapon()->getWeaponSprite()->setFlippedY(false);
+		}
 		ableToSingleMove = false;
 		return;
 	}
 	else if ((isKeyPressed(rightArrow) || isKeyPressed(rightD)) && ableToSingleMove) {
 		keyPressedDuration(rightArrow);
 		//getMainWeapon()->setPosition(Vec2(22, 22));
-		getMainWeapon()->getWeaponSprite()->setFlippedX(false);
-		getMainWeapon()->getWeaponSprite()->setFlippedY(false);
+		if (getMainWeapon()== nullptr)
+		{
+			log("Weapon's Sprite is null now");
+		}
+		else
+		{
+			getMainWeapon()->getWeaponSprite()->setFlippedX(false);
+			getMainWeapon()->getWeaponSprite()->setFlippedY(false);
+		}
 		log("Right!!");
 		ableToSingleMove = false;
 		return;

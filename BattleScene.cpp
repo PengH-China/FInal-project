@@ -1,3 +1,4 @@
+
 /**
 *@file BattleScene.cpp
 *@author 张子涵 方新宇
@@ -14,8 +15,8 @@ cocos2d::Scene* BattleScene::createScene(TMXTiledMap* map)
 	auto scene = Scene::createWithPhysics();
 	auto layer = BattleScene::create(map);
 	scene->addChild(layer);
-	scene->getPhysicsWorld()->setGravity(Vec2::ZERO);
-	scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	//scene->getPhysicsWorld()->setGravity(Vec2::ZERO);
+	//scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
 	return scene;
 }
@@ -39,7 +40,7 @@ BattleScene* BattleScene::create(TMXTiledMap* map)
 void BattleScene::addEdge()
 {
 	auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	
+
 	auto body = PhysicsBody::createEdgeBox(visibleSize, PHYSICSBODY_MATERIAL_DEFAULT, 3);
 	auto edgeShape = Node::create();
 
@@ -73,7 +74,7 @@ bool BattleScene::init()
 	BattleScene::loadBackgroundMap(this);//addEdge();
 	BattleScene::addPlayerAndUI();
 	BattleScene::createBarrier();
-
+	addEdge();
 
 	BattleScene::addMonster();
 	BattleScene::addBox();
@@ -82,11 +83,9 @@ bool BattleScene::init()
 	//add five dynamic bodies
 	for (int i = 0; i < 5; ++i)
 	{
-
-
 		auto sprite = Sprite::create("player.png");
-		sprite->setPosition(Vec2(visibleSize.width / 2+ cocos2d::random(-300, 300),
-			visibleSize.height / 2  + cocos2d::random(-300, 300)));
+		sprite->setPosition(Vec2(visibleSize.width / 2 + cocos2d::random(-300, 300),
+			visibleSize.height / 2 + cocos2d::random(-300, 300)));
 
 		auto physicsBody = PhysicsBody::createBox(sprite->getContentSize(),
 			PhysicsMaterial(0.1f, 1.0f, 0.0f));
@@ -95,7 +94,7 @@ bool BattleScene::init()
 		physicsBody->setGravityEnable(false);
 
 		//set initial velocity of physicsBody
-		physicsBody->setVelocity(Vec2(0,0));
+		physicsBody->setVelocity(Vec2(0, 0));
 
 
 		physicsBody->setCategoryBitmask(1);
@@ -178,7 +177,7 @@ void BattleScene::addPlayerAndUI(/*float dt*/) {
 		log("end init UI");
 	}
 
-	
+
 }
 
 bool BattleScene::addMonster()
@@ -204,7 +203,7 @@ bool BattleScene::addMonster()
 void BattleScene::addBox()
 {
 	auto box = TreasureBox::create();
-	
+
 	this->addChild(box, 4, QS::Name::kTreasure);
 }
 
@@ -282,8 +281,8 @@ void BattleScene::createBarrier()
 		tmpSprite->setContentSize(Size(width, height));
 		tmpSprite->addComponent(tmpPhysicsBody);
 		tmpSprite->setTag(QS::kBarrierTag);
-		log("%f %f %f %f %d", x, y, width, height,num++);
-		
+		log("%f %f %f %f %d", x, y, width, height, num++);
+
 		this->addChild(tmpSprite, 2);
 	}
 }
@@ -324,9 +323,9 @@ bool BattleScene::onContactBegin(PhysicsContact& contact)
 				if (nodeA->getTag() == QS::kHeroTag)
 				{
 					log("enter?");
-					Sprite* pSprite =dynamic_cast<Sprite*>(nodeA); 
+					Sprite* pSprite = dynamic_cast<Sprite*>(nodeA);
 					auto heroCopy = dynamic_cast<Hero*>(pSprite->getParent());
-					
+
 					heroCopy->setHitWall(true);
 					log("%d %s", heroCopy->getM_nowFacing(), heroCopy->getHeroSpriteName());
 					heroCopy->move(heroCopy->getM_nowFacing(), heroCopy->getHeroSpriteName());
@@ -351,17 +350,34 @@ bool BattleScene::onContactBegin(PhysicsContact& contact)
 				|| (nodeB->getTag() == QS::kHeroBulletTag && nodeA->getTag() == QS::kMonsterTag))
 			{
 				log("Qiuqiunima");
-				
+
 				if (nodeA->getTag() == QS::kHeroBulletTag)
 				{
-					nodeA->getParent()->removeFromParent();
-					nodeB->removeFromParent();
+					auto* bulletCopy = dynamic_cast<Bullet*>(nodeA);
+					Monster* mosnterCopy = dynamic_cast<Monster*>(nodeB);
+
+					mosnterCopy->setHealth(mosnterCopy->getHealth()- bulletCopy->getDamage());
+
+					auto changeColor = TintTo::create(0, Color3B::RED);
+					auto changeBack = TintTo::create(0.5, 255, 255, 255);
+
+					nodeB->runAction(Sequence::create(changeColor, changeBack, nullptr));
+					nodeA->removeFromParent();
 					return true;
 				}
 				else
 				{
-					nodeA->removeFromParent();
-					nodeB->getParent()->removeFromParent();
+					auto* bulletCopy = dynamic_cast<Bullet*>(nodeB);
+					Monster* mosnterCopy = dynamic_cast<Monster*>(nodeA);
+
+					mosnterCopy->setHealth(mosnterCopy->getHealth() - bulletCopy->getDamage());
+
+					auto changeColor = TintTo::create(0, Color3B::RED);
+					auto changeBack = TintTo::create(0.5, 255, 255, 255);
+
+					nodeA->runAction(Sequence::create(changeColor, changeBack, nullptr));
+
+					nodeB->removeFromParent();
 					return true;
 				}
 			}
@@ -373,14 +389,22 @@ bool BattleScene::onContactBegin(PhysicsContact& contact)
 
 				if (nodeA->getTag() == QS::kHeroTag)
 				{
-					nodeA->removeFromParent();
-					nodeB->getParent()->removeFromParent();
+					nodeB->removeFromParent();
+
+					auto changeColor = TintTo::create(0, Color3B::RED);
+					auto changeBack = TintTo::create(0.5, 255, 255, 255);
+
+					nodeA->runAction(Sequence::create(changeColor, changeBack, nullptr));
 					return true;
 				}
 				else
 				{
-					nodeA->getParent()->removeFromParent();
-					nodeB->removeFromParent();
+					nodeA->removeFromParent();
+
+					auto changeColor = TintTo::create(0, Color3B::RED);
+					auto changeBack = TintTo::create(0.5, 255, 255, 255);
+
+					nodeB->runAction(Sequence::create(changeColor, changeBack, nullptr));
 					return true;
 				}
 			}
@@ -428,25 +452,58 @@ bool BattleScene::onContactBegin(PhysicsContact& contact)
 
 			// HeroSword  punch  Monster
 			else if (((nodeA)->getTag() == QS::kHeroSwordAttackingTag && (nodeB)->getTag() == QS::kMonsterTag)
-			|| ((nodeB)->getTag() == QS::kHeroSwordAttackingTag && (nodeA)->getTag() == QS::kMonsterTag))
+				|| ((nodeB)->getTag() == QS::kHeroSwordAttackingTag && (nodeA)->getTag() == QS::kMonsterTag))
+			{
+				log("Qiuqiunima");
+
+				if (nodeA->getTag() == QS::kHeroSwordAttackingTag)
+				{
+					nodeB->setColor(Color3B::RED);
+					log("should be red");
+
+					//two actions to change color and back with o0.5s delay
+					auto changeColor = TintTo::create(0, Color3B::RED);
+					auto changeBack = TintTo::create(0.5, 255, 255, 255);
+
+					nodeB->runAction(Sequence::create(changeColor, changeBack, nullptr));
+
+					return true;
+				}
+				else
+				{
+
+					log("should be red");
+					//two actions to change color and back with o0.5s delay
+					auto changeColor = TintTo::create(0, Color3B::RED);
+					auto changeBack = TintTo::create(0.5, 255, 255, 255);
+
+					nodeB->runAction(Sequence::create(changeColor, changeBack, nullptr));
+
+					return true;
+				}
+			}
+
+			// MonsterBullet  punch  HeroSword
+			else if (((nodeA)->getTag() == QS::kMonsterBulletTag && (nodeB)->getTag() == QS::kHeroSwordAttackingTag)
+			|| ((nodeB)->getTag() == QS::kMonsterBulletTag && (nodeA)->getTag() == QS::kHeroSwordAttackingTag))
 			{
 			log("Qiuqiunima");
 
-			if (nodeA->getTag() == QS::kHeroSwordAttackingTag)
-			{
-				nodeB->removeFromParent();
-
-				return true;
-			}
-			else
+			if (nodeA->getTag() == QS::kMonsterBulletTag)
 			{
 				nodeA->removeFromParent();
 
 				return true;
 			}
+			else
+			{
+				nodeB->removeFromParent();
+
+				return true;
+			}
 			}
 		}
-		
+
 	}
 
 	/*if ((nodeA->getTag() == sk::tag::kMonster && nodeB->getTag() == sk::tag::kBarrier)
@@ -466,45 +523,45 @@ bool BattleScene::onContactBegin(PhysicsContact& contact)
 		}
 	}*/
 
-		/*if ((nodeA->getTag() == sk::tag::kHero && nodeB->getTag() == sk::tag::kDoor)
-			|| (nodeB->getTag() == sk::tag::kHero && nodeA->getTag() == sk::tag::kDoor))
+	/*if ((nodeA->getTag() == sk::tag::kHero && nodeB->getTag() == sk::tag::kDoor)
+		|| (nodeB->getTag() == sk::tag::kHero && nodeA->getTag() == sk::tag::kDoor))
+	{
+		m_mapNumber++;
+		if (m_mapNumber == 10)
 		{
-			m_mapNumber++;
-			if (m_mapNumber == 10)
-			{
-				return true;
-			}
-			auto map = createTiled(m_mapNumber);
-			if (!map)
-			{
-				return false;
-			}
-			auto nextRoom = createScene(map);
-			auto hero = Hero::getInstance();
-			hero->retain();
-			hero->removeFromParentAndCleanup(false);
-			hero->setPosition(640.f, 100.f);
-			hero->generatePhysics();
-			nextRoom->addChild(Hero::getInstance(), 3);
-			auto keyBoardListener = EventListenerKeyboard::create();
-			keyBoardListener->onKeyPressed = CC_CALLBACK_2(Hero::onKeyPressed, hero);
-			keyBoardListener->onKeyReleased = CC_CALLBACK_2(Hero::onKeyReleased, hero);
-			_eventDispatcher->addEventListenerWithSceneGraphPriority(keyBoardListener, nextRoom);
-
-			BulletLayer* bulletLayer = BulletLayer::create();
-			bulletLayer->retain();
-			bulletLayer->bindHero(hero);
-			nextRoom->addChild(bulletLayer, 8, 450);
-			Director::getInstance()->replaceScene(nextRoom);
-
-			Buff::getInstance()->flamingEnd();
-			Buff::getInstance()->flamingEnd();
-			Buff::getInstance()->rootedEnd(100.f);
-
 			return true;
-		}*/
-		
-	
+		}
+		auto map = createTiled(m_mapNumber);
+		if (!map)
+		{
+			return false;
+		}
+		auto nextRoom = createScene(map);
+		auto hero = Hero::getInstance();
+		hero->retain();
+		hero->removeFromParentAndCleanup(false);
+		hero->setPosition(640.f, 100.f);
+		hero->generatePhysics();
+		nextRoom->addChild(Hero::getInstance(), 3);
+		auto keyBoardListener = EventListenerKeyboard::create();
+		keyBoardListener->onKeyPressed = CC_CALLBACK_2(Hero::onKeyPressed, hero);
+		keyBoardListener->onKeyReleased = CC_CALLBACK_2(Hero::onKeyReleased, hero);
+		_eventDispatcher->addEventListenerWithSceneGraphPriority(keyBoardListener, nextRoom);
+
+		BulletLayer* bulletLayer = BulletLayer::create();
+		bulletLayer->retain();
+		bulletLayer->bindHero(hero);
+		nextRoom->addChild(bulletLayer, 8, 450);
+		Director::getInstance()->replaceScene(nextRoom);
+
+		Buff::getInstance()->flamingEnd();
+		Buff::getInstance()->flamingEnd();
+		Buff::getInstance()->rootedEnd(100.f);
+
+		return true;
+	}*/
+
+
 	return false;
 }
 
@@ -513,26 +570,22 @@ bool BattleScene::onMouseDown(EventMouse* e)
 {
 	log("mouseDown");
 	auto curTime = clock();
-	if (static_cast<double>(curTime - m_lastShotTime) / CLOCKS_PER_SEC
-		< pHero->getMainWeapon()->getInterval())
-	{
-		return true;
-	}
-	m_lastShotTime = curTime;
-	if (pHero->getMainWeapon()->getBulletCount() == 0)
-	{
-		pHero->getMainWeapon()->getSprite()->setVisible(false);
-		Bullet* pBullet = pHero->getMainWeapon()->createBullet();
-		//pBullet->attack(0, 0, pHero->getSprite()->getPosition(), pHero->getM_nowFacing());
-		//this->addChild(pBullet, 5);
-		pHero->getMainWeapon()->getSprite()->setVisible(true);
-	}
-	else
-	{
-		for (int i = 1; i < pHero->getMainWeapon()->getBulletCount(); i++)
+	if (pHero->getMainWeapon() != nullptr) {
+		if (static_cast<double>(curTime - m_lastShotTime) / CLOCKS_PER_SEC
+			< pHero->getMainWeapon()->getInterval())
+		{
+			return true;
+		}
+		m_lastShotTime = curTime;
+		if (pHero->getMainWeapon()->getBulletCount() == 0)
+		{
+			//pHero->throwMainWeapon();
+		}
+		else
+			//枪有子弹的时候
 		{
 			//人物精灵在场景中的坐标
-			Vec2 heroPos = pHero->getPosition()+ pHero->getSprite()->getPosition();
+			Vec2 heroPos = pHero->getPosition() + pHero->getSprite()->getPosition();
 			//获取鼠标位置，并修正纵轴位置
 			Vec2 mousePos = e->getLocationInView();
 			//死也不要改这里980
@@ -547,7 +600,7 @@ bool BattleScene::onMouseDown(EventMouse* e)
 			this->addChild(pBullet, 5);
 			pBullet->setPosition(heroPos);
 			pBullet->attack(dire.x, dire.y, heroPos, pHero->getM_nowFacing());
-			
+			log("BulletCount: %d", pHero->getMainWeapon()->getBulletCount());
 		}
 	}
 	return true;
@@ -556,7 +609,6 @@ bool BattleScene::onMouseDown(EventMouse* e)
 void BattleScene::onMouseUp(EventMouse* event)
 {
 	log("mouseUp");
-
 }
 
 
@@ -581,4 +633,3 @@ void BattleScene::onMouseMove(EventMouse* e)
 	this->getMainWeapon()->setRotation(jiaodu);*/
 
 }
-

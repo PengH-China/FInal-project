@@ -70,7 +70,7 @@ namespace QS
 		static const std::string kCoin = "Coin";
 		static const std::string kHealthPotion = "HealthPotion";
 		static const std::string kArmorPotion = "ArmorPotion";
-		static const std::string kGunWeapon = "GunWeapon";
+		static const std::string kNormalGunWeapon = "NormalGunWeapon";
 		static const std::string kShotgunWeapon = "ShotgunWeapon";
 		static const std::string kSwordWeapon = "SwordWeapon";
 		static const std::string kSpearWeapon = "SpearWeapon";

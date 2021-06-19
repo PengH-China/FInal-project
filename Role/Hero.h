@@ -10,6 +10,7 @@
 #include "cocos2d.h"
 #include "Role/Role.h"
 #include "Item/NormalGun.h"
+#include "Item/ShotGun.h"
 #include "Item/Sword.h"
 #include "Item/Item.h"
 #include "Const/Const.h"
@@ -54,6 +55,8 @@ public:
 	void setMainWeapon(Weapon* pWeapon);
 	//获取当前主武器
 	Weapon* getMainWeapon();
+	//扔掉当前的主武器
+	void throwMainWeapon();
 
 	CC_SYNTHESIZE(int, _m_nomFacing, M_nowFacing);
 

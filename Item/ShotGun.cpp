@@ -1,16 +1,16 @@
-#include "NormalGun.h"
+#include "ShotGun.h"
 
-Bullet* NormalGun::createBullet() {
-	Bullet* pBullet = NormalBullet::create();
+Bullet* ShotGun::createBullet() {
+	Bullet* pBullet = ShotGunBullet::create();
 	//调用一次子弹创建，则枪的子弹数减少
 	m_bulletCount--;
-	pBullet->Bullet::setDamage(NormalGun::getDamage());
+	pBullet->Bullet::setDamage(ShotGun::getDamage());
 	//if (gIsEffectPlaying)
 	//	AudioEngine::play2d(QS::files::kGunShot);
 	return pBullet;
 }
 
-bool NormalGun::init() {
+bool ShotGun::init() {
 	scheduleUpdate();
 
 	auto listenerKeyboard = EventListenerKeyboard::create();
@@ -20,7 +20,7 @@ bool NormalGun::init() {
 	//注册键盘监听
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerKeyboard, this);
 
-	Sprite* pSprite = Sprite::create("Item/NormalGun.png");
+	Sprite* pSprite = Sprite::create("Item/ShotGun.png");
 	if (pSprite == nullptr)
 	{
 		log("weapons.png not found");
@@ -30,12 +30,12 @@ bool NormalGun::init() {
 	pSprite->setScale(.4f);
 	pSprite->setAnchorPoint(Vec2(0.5f, 0.5f));
 	pSprite->setPosition(0, 0);
-	generatePhysicalBody(QS::message::kGunMessage,QS::kHeroSwordRestingTag);
-	setWeaponName(QS::Name::kNormalGunWeapon);
-	Weapon::setDamage(1);
+	generatePhysicalBody(QS::message::kShotgunMessage, QS::kHeroSwordRestingTag);
+	setWeaponName(QS::Name::kShotgunWeapon);
+	Weapon::setDamage(3);
 	Weapon::setInterval(.2f);
 	Weapon::setState(false);
-	//弹夹设为30
-	Weapon::setBulletCount(30);
+	//弹夹设为10
+	Weapon::setBulletCount(10);
 	return true;
 }
