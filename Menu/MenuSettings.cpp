@@ -4,9 +4,13 @@
 *@date 5/27/2021
 */
 
+#include"GlobalParameter.h"
+
+
 #include "MenuSettings.h"
 #include "cocos2d.h"
 #include "AudioEngine.h"
+
 
 using namespace cocos2d;
 
@@ -88,8 +92,8 @@ bool MenuSettings::init()
 	auto* musicChoice = musicOn;
 
 	if (isMusic) {
-		 musicStatus = musicOn;
-		 musicChoice = musicOff;
+		musicStatus = musicOn;
+		musicChoice = musicOff;
 	}
 
 	auto musicControlItem = MenuItemToggle::createWithCallback(
@@ -152,15 +156,16 @@ void MenuSettings::menuSoundEffectCallback(Ref* pSender)
 
 	if (isEffect) //选中状态 Off -> On
 	{
-		auto soundEffectID = AudioEngine::play2d("sound/Blip.wav", false);//按键声
+		auto soundEffectID = AudioEngine::play2d("sound/Blip.mp3", false);//按键声
+		log("soundEffect%d is on", soundEffectID);
 		isEffect = false;
 	}
 	else
 	{
 		isEffect = true;
-		auto soundEffectID = AudioEngine::play2d("sound/Blip.wav", false);
+		auto soundEffectID = AudioEngine::play2d("sound/Blip.mp3", false);//按键声
+		log("soundEffect%d is on", soundEffectID);
 	}
-	
 }
 
 void MenuSettings::menuMusicCallback(Ref* pSender)
@@ -168,10 +173,6 @@ void MenuSettings::menuMusicCallback(Ref* pSender)
 	auto* musicControlItem = (MenuItemToggle*)pSender;
 	log("menuMusicCallback %d", musicControlItem->getSelectedIndex());
 
-	//读文件内容
-	//auto sharedFileUtils = FileUtils::getInstance();
-	//std::string pathKey = sharedFileUtils->fullPathForFilename("isMusic.txt");
-	
 	if (isMusic) //选中状态 Off -> On
 	{
 		AudioEngine::stopAll();
@@ -181,11 +182,13 @@ void MenuSettings::menuMusicCallback(Ref* pSender)
 	{
 		isMusic = true;
 		auto backgroundAudioID = AudioEngine::play2d("sound/backgroundMusic.mp3", true);
+		log("music%d is on", backgroundAudioID);
 		//true--->loop
 	}
 
 	if (isEffect) {
-		auto soundEffectID = AudioEngine::play2d("sound/Blip.wav", false);
+		auto soundEffectID = AudioEngine::play2d("sound/Blip.mp3", false);//按键声
+		log("soundEffect%d is on", soundEffectID);
 		//按键声
 	}
 }
@@ -194,6 +197,12 @@ void MenuSettings::menuBackCallback(cocos2d::Ref* pSender)
 {
 	MenuItem* item = (MenuItem*)pSender;
 	log("Touch back MenuItem %p", item);
+
+	if (isEffect) {
+		auto soundEffectID = AudioEngine::play2d("sound/Blip.mp3", false);//按键声
+		log("soundEffect%d is on", soundEffectID);
+		//按键声
+	}
 
 	Director::getInstance()->popScene();
 

@@ -8,7 +8,7 @@
 
 #include "Bullet.h"
 #include "AudioEngine.h"
-#include "Item.h" 
+#include "Item/Item.h" 
 
 using namespace cocos2d;
 class Weapon :public Item
@@ -39,7 +39,7 @@ public:
 	*@brief 与手中武器交换
 	@@author 蔡明宏
 	*/
-	void interact() override;
+	/*void interact() override;*/
 	//TODO:与地面武器交换
 
 	/**
@@ -70,6 +70,8 @@ public:
 	*/
 	virtual Bullet* createBullet();
 
+	
+	Sprite* getWeaponSprite();
 protected:
 	Sprite* m_pSpriteWeapon = nullptr;
 	bool m_isInHand = false;
@@ -77,6 +79,5 @@ protected:
 	float m_attackInterval;
 	int m_bulletCount;
 };
-
 
 #endif // !_WEAPON_H_

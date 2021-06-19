@@ -7,8 +7,10 @@
 #ifndef _SWORD_H_
 #define _SWORD_H_
 
-#include "Item.h"
-#include "Weapon.h"
+#include "Item/Item.h"
+#include "Item/Weapon.h"
+#include "Item/NormalBullet.h"
+
 class Sword :public Weapon
 {
 public:
@@ -18,6 +20,8 @@ public:
 	*@author ²ÌÃ÷ºê
 	*/
 	Bullet* createBullet() override;
+
+	Animate* createAnimate(const std::string  pActionName);
 
 	bool init() override;
 };

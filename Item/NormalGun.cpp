@@ -1,4 +1,5 @@
 #include "NormalGun.h"
+
 Bullet* NormalGun::createBullet() {
 	Bullet* pBullet = NormalBullet::create();
 	//if (gIsEffectPlaying)
@@ -7,16 +8,19 @@ Bullet* NormalGun::createBullet() {
 }
 
 bool NormalGun::init() {
-	Sprite* pSprite = Sprite::create("NormalGun.png");
+	Sprite* pSprite = Sprite::create("Item/NormalGun.png");
 	if (pSprite == nullptr)
 	{
 		log("weapons.png not found");
 	}
+	m_pSpriteWeapon = pSprite;
 	bindSprite(pSprite);
-	generatePhysicalBody(QS::message::kGunMessage, QS::Name::kGunWeapon);
+	pSprite->setScale(.4f);
+	pSprite->setAnchorPoint(Vec2(0.5f, 0.5f));
+	pSprite->setPosition(0, 0);
+	generatePhysicalBody(QS::message::kGunMessage,QS::kHeroSwordRestingTag);
 	setDamage(1);
 	setInterval(.2f);
-	setBulletCount(1);
-	this->addChild(pSprite);
+	setBulletCount(2);
 	return true;
 }

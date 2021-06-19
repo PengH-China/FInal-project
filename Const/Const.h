@@ -1,9 +1,8 @@
-#pragma once
 
 /**
  * @file   Const.h
- * @brief  æ‰€æœ‰å¸¸é‡
- * @author æŒ‰éœ€è¦è‡ªä¸»æ·»åŠ 
+ * @brief  ËùÓĞ³£Á¿
+ * @author °´ĞèÒª×ÔÖ÷Ìí¼Ó
  */
 
 #ifndef _CONST_H_
@@ -11,18 +10,27 @@
 
 #include <string>
 
-bool isEffect = false;
-bool isMusic = false;
-
 namespace QS
 {
-	enum Move
+	/*enum Move
 	{
 		kUp,
 		kDown,
 		kLeft,
 		kRight
-	};
+	};*/
+
+
+	const int kBarrierTag = 0,
+		kHeroTag = 1,
+		kHeroBulletTag = 2,
+		kMonsterTag = 3,
+		kMonsterBulletTag = 4,
+		kHeroSwordAttackingTag = 5,
+		kHeroSwordRestingTag = 6,
+		kBoxTag = 7;
+
+
 	enum class Kind
 	{
 		kSelf,
@@ -50,37 +58,37 @@ namespace QS
 		kInteract
 	};
 	namespace Name {
-		//ä½¿ç”¨stringè€Œéintegerï¼Œåˆ™åé¢è¾¨åˆ«nodeåˆ™ç”¨getName()è€ŒégetTag();
-		static const std::string kHero="Hero";
-		static const std::string kMonster="Monster";
-		static const std::string kBullet ="Bullet";
-		static const std::string kMonsterBullet="MonsterBullet";
-		static const std::string kCloseDamage="CloseDamage";
-		static const std::string kMonsterClose ="MonsterClose";
-		static const std::string kFreezeTrap ="FreezeTrap";
-		static const std::string kFlameTrap ="FlameTrap";
-		static const std::string kCoin ="Coin";
-		static const std::string kHealthPotion ="HealthPotion" ;
-		static const std::string kArmorPotion ="ArmorPotion" ;
-		static const std::string kGunWeapon  = "GunWeapon";
-		static const std::string kShotgunWeapon ="ShotgunWeapon";
-		static const std::string kSwordWeapon ="SwordWeapon";
-		static const std::string kSpearWeapon ="SpearWeapon";
-		static const std::string kTreasure ="Treasure";
-		static const std::string kWarStatue ="WarStatue";
-		static const std::string kAssassinStatue="AssassinStatue";
-		static const std::string kIncreaseDamage="IncreaseDamage";
-		static const std::string kHeroUI ="HeroUI";
+		//Ê¹ÓÃstring¶ø·Çinteger£¬ÔòºóÃæ±æ±ğnodeÔòÓÃgetName()¶ø·ÇgetTag();
+		static const std::string kHero = "Hero";
+		static const std::string kMonster = "Monster";
+		static const std::string kBullet = "Bullet";
+		static const std::string kMonsterBullet = "MonsterBullet";
+		static const std::string kCloseDamage = "CloseDamage";
+		static const std::string kMonsterClose = "MonsterClose";
+		static const std::string kFreezeTrap = "FreezeTrap";
+		static const std::string kFlameTrap = "FlameTrap";
+		static const std::string kCoin = "Coin";
+		static const std::string kHealthPotion = "HealthPotion";
+		static const std::string kArmorPotion = "ArmorPotion";
+		static const std::string kGunWeapon = "GunWeapon";
+		static const std::string kShotgunWeapon = "ShotgunWeapon";
+		static const std::string kSwordWeapon = "SwordWeapon";
+		static const std::string kSpearWeapon = "SpearWeapon";
+		static const std::string kTreasure = "Treasure";
+		static const std::string kWarStatue = "WarStatue";
+		static const std::string kAssassinStatue = "AssassinStatue";
+		static const std::string kIncreaseDamage = "IncreaseDamage";
+		static const std::string kHeroUI = "HeroUI";
 		static const std::string kBoard = "Board";
 		static const std::string kDoor = "Door";
-		static const std::string kBarrier ="Barrier";
-		static const std::string kChangeHero="ChangeHero";
-		static const std::string kBulletLayer="BulletLayer";
+		static const std::string kBarrier = "Barrier";
+		static const std::string kChangeHero = "ChangeHero";
+		static const std::string kBulletLayer = "BulletLayer";
 		static const std::string kGidTag = "Gid";
 	}
 	namespace bitMask {
 		/*
-		* @brief æš‚æœªå®ç°äººä¸äººä¹‹é—´çš„æ”»å‡»äº¤äº’ï¼Œå‰é¢Kind::Selfçš„å®šä¹‰ä¸å¤ªå‡†ç¡®ï¼Œè¿˜éœ€è¦åˆ†ç±»
+		* @brief ÔİÎ´ÊµÏÖÈËÓëÈËÖ®¼äµÄ¹¥»÷½»»¥£¬Ç°ÃæKind::SelfµÄ¶¨Òå²»Ì«×¼È·£¬»¹ĞèÒª·ÖÀà
 		*/
 		static const int kHeroCategory = 0x4;
 		static const int kHeroCollision = 0x1;
@@ -110,7 +118,7 @@ namespace QS
 		static const int kMonsterBulletCollision = 0x3;
 		static const int kMonsterBulletContact = 0x7;
 	}
-  namespace message {
+	namespace message {
 		static const std::string kGunMessage = "Normal Gun\nDamage:1";
 		static const std::string kShotgunMessage = "Shotgun\nDamage:3";
 		static const std::string kSwordMessage = "Sword\nDamage:4";
@@ -123,9 +131,18 @@ namespace QS
 		static const std::string kMonsterPigMessage = "MonsterPig\ndashSpeed:150\nattackRange:75";
 		static const std::string kMonsterSnowMessage = "MonsterSnow\njumpDistance:50\nattackRange:75";
 		static const std::string kMonsterBossMessage = "Boss\nHealth:300\nattackRange:800\nbackUpDistance:100";
+		static const std::string kTreasureMessage = "TreasureBox";
 	}
-  const char* kSoldier1 = "Soldier/Soldier1.png";
-	const char* kSoldier2 = "Soldier/Soldier2.png";
+	static const char* kSoldier1 = "Soldier/Soldier1.png";
+	static const char* kSoldier2 = "Soldier/Soldier2.png";
+
+
+	static const std::string normalBoxClose = "Item/Box/normalBoxClose.png";
+	static const std::string normalBoxOpen = "Item/Box/normalBoxOpen.png";
+	static const std::string silverBoxClose = "Item/Box/silverBoxClose.png";
+	static const std::string silverBoxOpen = "Item/Box/silverBoxOpen.png";
+	static const std::string goldBoxClose = "Item/Box/goldBoxClose.png";
+	static const std::string goldBoxOpen = "Item/Box/goldBoxOpen.png";
 
 	constexpr int kSoldierHeight = 100;
 	constexpr int kSoldierWidth = 50;

@@ -3,6 +3,7 @@
 #define __MENUHELP_H__
 
 #include "cocos2d.h"
+#include"SceneChangeLoad.h"
 
 USING_NS_CC;
 

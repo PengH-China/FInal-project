@@ -1,473 +1,82 @@
 /**
 *@file Hero.cpp
-*@author 彭浩(peng hao)
-*@time 2021-05-28
+*@author 张子涵(Zhang Zihan),蔡明宏,彭浩
+*@time 2021-06-11
 */
 #include "Hero.h"
 
+Item* Hero::m_pPresentContactItem = nullptr;
 
-
-void Hero::move(int face, const char* pAnimateName,
-				int width, int height, int frames) {
-	log("move!!");
-	// 0.3s duration
-	int offsetX = 0, offsetY = 0;
-	Animate* pMoveAction = nullptr;//animate is also a action
-
-	SpriteFrame* frame = nullptr;
-	Vector<SpriteFrame*> frameVec;
-	int beginHeight = 0;
-	const int speedEveryPress = 20;
-
-	log("face %d", face);
-	switch (face) {
-		case QS::kDown: {
-			offsetY = -speedEveryPress;
-			beginHeight = 0;
-			log("pMoveAction down end!");
-			break;
-		}
-		case QS::kUp: {
-			offsetY = speedEveryPress;
-			beginHeight = 300;
-			log("pMoveAction up end!");
-			break;
-		}
-		case QS::kLeft: {
-			offsetX = -speedEveryPress;
-			beginHeight = 100;
-		
-			log("pMoveAction left end!");
-			break;
-		}
-		case QS::kRight: {
-			offsetX = speedEveryPress;
-			beginHeight = 200;
-			
-			log("pMoveAction right end!");
-			break;
-		}
-		default: {
-			log("invalid keybpard");
-		}
+Hero* Hero::createHero(Point position,std::string pName)
+{
+	Hero* hero = new Hero();
+	if (hero && hero->init())
+	{
+		hero->autorelease();
+		hero->setHeroSpriteName(pName);
+		hero->soldierPositionInit(position);
+		return hero;
 	}
+	CC_SAFE_DELETE(hero); 
+	return NULL;
+}
 
-	for (int i = 0; i < frames; i++) {
-		frame = SpriteFrame::create(pAnimateName,//"Soldier/Soldier1.png",
-							 		Rect(i * width, beginHeight, width, height));
-		if (frame == nullptr)
-		{
-			log("animate %s.png lost", pAnimateName, i);
-		}
-		else
-		{
-			log("i: %d", i);
-			//frame->setAnchorPoint(Vec2(0.5f, 0.f));
-			frameVec.pushBack(frame);
-		}
-		frame = nullptr;
-	}
+bool Hero::init()
+{
+	//键盘事件创建
+	auto listenerKeyboard = EventListenerKeyboard::create();
+	//键盘事件响应函数
+	listenerKeyboard->onKeyPressed = CC_CALLBACK_2(Hero::onKeyPressed, this);
+	listenerKeyboard->onKeyReleased = CC_CALLBACK_2(Hero::onKeyReleased, this);
+	//注册键盘监听
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerKeyboard, this);
 
-	Animation* p_Animation = Animation::createWithSpriteFrames(frameVec);
-	p_Animation->setRestoreOriginalFrame(true);//back to the original image
-	p_Animation->setLoops(1);
-	p_Animation->setDelayPerUnit(0.05f);
-	Animate* p_AnimateAction = Animate::create(p_Animation);
-	pMoveAction = p_AnimateAction;
-
-	if (pMoveAction == nullptr) {
-		log("a failed animation create");
-	}
-	auto moveBy = MoveBy::create(0.4f, Vec2( offsetX, offsetY));
 	
-	//auto finalAction = Spawn::create(moveBy, p_AnimateAction, nullptr);
-	
-	//m_pRole->runAction(finalAction);
-	m_pRole->runAction(moveBy);
-	
-}
 
-void Hero::stopMove() {
-	m_pRole->stopAction(m_pMoveAnimation);
-}
-
-void Hero::rest() {
-	m_pRole->runAction(m_pRestAnimation);
-}
-
-void Hero::die()
-{
-#if 0
-    SafeMap::m_nowID = Hero::m_ID;
-    m_pPresentHero = nullptr;
-    this->removeFromParentAndCleanup(false);
-    RoomMap::m_mapNumber = 1;
-    auto safeMap = SafeMap::createScene();
-    Director::getInstance()->replaceScene(safeMap);
-
-    m_alive = true;
-#endif
-}
+	setM_nowFacing(3);
 
 
-void Hero::dieToStartMenu(){
-#if 0
-    m_pPresentHero = nullptr;
-    this->removeFromParentAndCleanup(false);
-    auto start = Start::createScene();
-    Director::getInstance()->replaceScene(start);
-#endif
-}
 
-int Hero::getFacing() {
-    return m_nowFacing;
-}
-
-Weapon* Hero::getMainWeapon()
-{
-	return this->m_pMainWeapon;
-	
-}
-
-void Hero::setMainWeapon(Weapon* pNewWeapon)
-{
-	pNewWeapon->setState(true);
-	pNewWeapon->setPosition(Point(20.0, 20.0));
-	m_pMainWeapon = pNewWeapon;
-	this->addChild(pNewWeapon, 2);
-}
-
-void Hero::setSecondWeapon(Weapon* pNewWeapon)
-{
-	pNewWeapon->setState(true);
-	pNewWeapon->setPosition(Point(20.0, 20.0));
-	m_pSecWeapon = pNewWeapon;
-	this->addChild(pNewWeapon, 2);
-}
-
-void Hero::shiftWeapon()
-{
-	if (m_pSecWeapon != nullptr)
-	{
-		m_pMainWeapon->setVisible(false);
-		m_pSecWeapon->setVisible(true);
-		Weapon* pTemp = m_pSecWeapon;
-		m_pSecWeapon = m_pMainWeapon;
-		m_pMainWeapon = pTemp;
-		//if (gIsEffectPlaying)//play music effect
-			//AudioEngine::play2d(sk::files::kWeaponSwitch);
-	}
-}
-
-/*
-void Hero::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
-    log("Key %d pressed.", keyCode);
+	setHealth(10);
+	setMaxHealth(10);
+	setArmor(3);
+	setMaxArmor(10);
+	setFirePower(10);
+	setMaxFirePower(10);
+	setCoinNumber(0);
+	setspeed(2);
+	setScore(0);
 
 
-	if (keyCode == EventKeyboard::KeyCode::KEY_D ||
-		keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
-	{
-		m_isKeyDown[QS::kRight] = true;
-	}
-	else if (keyCode == EventKeyboard::KeyCode::KEY_W ||
-			 keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW)
-	{
-		m_isKeyDown[QS::kUp] = true;
-	}
-	else if (keyCode == EventKeyboard::KeyCode::KEY_A ||
-			 keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
-	{
-		m_isKeyDown[QS::kLeft] = true;
-	}
-	else if (keyCode == EventKeyboard::KeyCode::KEY_S ||
-			 keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW)
-	{
-		m_isKeyDown[QS::kDown] = true;
-	}
-#if 0
-	else if (keyCode == EventKeyboard::KeyCode::KEY_SPACE)
-	{
+	this->scheduleUpdate();
 
-		if (m_skillTime >= m_skillCD)
-		{
-			m_skillRemainTime = this->skill();
-			m_skillTime = -m_skillRemainTime;
-		}
-		else
-		{
-			log("skill CDing");
-		}
-	}
-	else if (keyCode == EventKeyboard::KeyCode::KEY_E)
-	{
-		this->shiftWeapon();
-	}
-	else if (keyCode == EventKeyboard::KeyCode::KEY_F)
-	{
-		if (m_pPresentContactItem != nullptr)
-		{
-			m_pPresentContactItem->interact();
-		}
-	}
-	else if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE)
-	{
-		Director::getInstance()->pushScene(PauseMenu::create(m_ID));
-	}
-#endif
-}
-
-void Hero::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
-{
-	m_ifStateChanged = true;
-	using namespace cocos2d;
-	if (keyCode == EventKeyboard::KeyCode::KEY_D ||
-		keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
-	{
-		m_isKeyDown[QS::kRight] = false;
-	}
-	else if (keyCode == EventKeyboard::KeyCode::KEY_W ||
-			 keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW)
-	{
-		m_isKeyDown[QS::kUp] = false;
-	}
-	else if (keyCode == EventKeyboard::KeyCode::KEY_A ||
-			 keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
-	{
-		m_isKeyDown[QS::kLeft] = false;
-	}
-	else if (keyCode == EventKeyboard::KeyCode::KEY_S ||
-			 keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW)
-	{
-		m_isKeyDown[QS::kDown] = false;
-	}
-}*/
-/*
-bool Hero::reduceHealth(int damage)
-{
-	if (m_ifMortal)
-	{
-		m_recoverArmorTime = -4;
-		if (m_armor != 0)
-		{
-			if (damage > m_armor)
-			{
-				damage -= m_armor;
-				m_armor = 0;
-			}
-			/*else//music file ,wait after
-			{
-				m_armor -= damage;
-				if (gIsEffectPlaying)
-					AudioEngine::play2d(sk::files::kHeroHurt);
-				return true;
-			}*/
-			/*}
-		if (damage >= m_health)
-		{
-			m_health = 0;
-			m_alive = false;
-			die();
-			return false;
-		}
-		else
-		{/*
-			m_health -= damage;
-			if (gIsEffectPlaying)
-				AudioEngine::play2d(sk::files::kHeroHurt);
-			return true;*/
-		/*}
-	}
-	return true;
-}
-*/
-		/*
-void Hero::recoverHealth(int healAmount)
-{
-	if (m_health + healAmount <= m_maxHealth)
-	{
-		m_health += healAmount;
-	}
-	else
-	{
-		m_health = m_maxHealth;
-	}
-}
-
-void Hero::addArmor(int addAmount)
-{
-	m_maxArmor += addAmount;
-}
-
-bool Hero::ifInjured()
-{
-	return m_health < m_maxHealth;
-}
-
-bool Hero::costCoins(int coin)
-{
-	if (m_coinNumber >= coin)
-	{
-		m_coinNumber -= coin;
-		return true;
-	}
-	else
+	if (!Layer::init())
 	{
 		return false;
 	}
+	return true;
 }
 
-void Hero::gainCoins(int coin)
+void Hero::setHeroSpriteName(std::string pName)
 {
-	m_coinNumber += coin;
+	this->m_pHeroSpriteName = pName;
+	return;
 }
 
-int Hero::getBaseDamage()
+std::string Hero::getHeroSpriteName()
 {
-	return m_baseDamage;
+	return m_pHeroSpriteName;
 }
-
-void Hero::raiseDamage(int raiseAmount)
-{
-	m_baseDamage += raiseAmount;
-}
-
-void Hero::setSpeed(float speed)
-{
-	m_speed = speed;
-}
-
-void Hero::clearKeyPress()
-{
-	for (auto key : m_isKeyDown)
-	{
-		key = false;
-	}
-}*/
-
-/*
-void Hero::update(float dt)
-{
-	auto v = Vec2(0, 0);
-	if (m_ifStateChanged)
-	{
-		if (m_isKeyDown[QS::Move::kUp])
-			v.y += m_speed;
-		if (m_isKeyDown[QS::Move::kDown])
-			v.y -= m_speed;
-		if (m_isKeyDown[QS::Move::kLeft])
-			v.x -= m_speed;
-		if (m_isKeyDown[QS::Move::kRight])
-			v.x += m_speed;
-
-		v = v.getNormalized() * m_speed;
-
-		getPhysicsBody()->setVelocity(v);
-	}
-	m_ifStateChanged = false;
-
-	if (v.x < 0 && m_nowFacing == QS::Move::kRight)
-	{
-		m_pRole->setFlippedX(true);
-		m_pMainWeapon->getSprite()->setFlippedX(true);
-		m_pMainWeapon->setPosition(Point(-20.0, 20.0));
-		m_pSecWeapon->getSprite()->setFlippedX(true);
-		m_pSecWeapon->setPosition(Point(-20.0, 20.0));
-		if (m_pMainWeapon->getSprite()->getName() == QS::Name::kSwordWeapon)
-		{
-			m_pMainWeapon->getSprite()->setRotation(60.f);
-		}
-		if (m_pSecWeapon->getSprite()->getName() == QS::Name::kSwordWeapon)
-		{
-			m_pSecWeapon->getSprite()->setRotation(60.f);
-		}
-		m_nowFacing = QS::Move::kLeft;
-	}
-	else if (v.x > 0 && m_nowFacing == QS::Move::kLeft)
-	{
-		m_pRole->setFlippedX(false);
-		m_pMainWeapon->getSprite()->setFlippedX(false);
-		m_pMainWeapon->setPosition(Point(20.0, 20.0));
-		m_pSecWeapon->getSprite()->setFlippedX(false);
-		m_pSecWeapon->setPosition(Point(20.0, 20.0));
-		if (m_pMainWeapon->getSprite()->getName() == QS::Name::kSwordWeapon)
-		{
-			m_pMainWeapon->getSprite()->setRotation(-60.f);
-		}
-		if (m_pSecWeapon->getSprite()->getName() == QS::Name::kSwordWeapon)
-		{
-			m_pSecWeapon->getSprite()->setRotation(-60.f);
-		}
-		m_nowFacing = QS::Move::kRight;
-	}
-
-	/*
-	if (getPhysicsBody()->getVelocity() != Vec2::ZERO)
-	{
-		if (!m_ifMoved)
-		{
-			m_ifMoved = true;
-			move();
-		}
-	}
-	else
-	{
-		if (m_ifMoved)
-		{
-			m_ifMoved = false;
-			stopMove();
-			rest();
-		}
-	}
-
-	if (m_skillTime < m_skillCD)
-	{
-		m_skillTime += dt;
-	}
-	if (m_skillRemainTime > 0)
-	{
-		m_skillRemainTime -= dt;
-		if (m_skillRemainTime <= 0)
-		{
-			//skillEnd();
-		}
-	}
-
-	if (m_recoverArmorTime < 1)
-	{
-		m_recoverArmorTime += dt;
-	}
-	else if (m_armor < m_maxArmor)
-	{
-		m_armor += 1;
-		log("armor regain");
-		m_recoverArmorTime = 0;
-	}
-	*/
-/*
-}
-
-void Hero::setSpeed(float speed)
-{
-	m_speed = speed;
-}
-
-void Hero::clearKeyPress()
-{
-	for (auto key : m_isKeyDown)
-	{
-		key = false;
-	}
-}*/
 
 void Hero::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* events) {
 	log("Pressed! %d", int(keyCode));
 	m_keys[keyCode] = true;
-	this->schedule(CC_SCHEDULE_SELECTOR(Hero::roleMoveUpdate), 0.4f);//update every 0.4 s
+	ableToSingleMove = true;
 }
+
 void Hero::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* events) {
 	log("Unpressed! %d", int(keyCode));
 	m_keys[keyCode] = false;
-	this->schedule(CC_SCHEDULE_SELECTOR(Hero::roleMoveUpdate), 0.4f);
 }
 
 bool Hero::isKeyPressed(EventKeyboard::KeyCode keyCode) {
@@ -480,8 +89,127 @@ bool Hero::isKeyPressed(EventKeyboard::KeyCode keyCode) {
 }
 
 
-void Hero::roleMoveUpdate(float delta ) {//detect every seconds what have done
+//返回两个向量的夹角
+float Hero::angle(const Vec2& v1, const Vec2& v2)
+{
+	float dz = v1.x * v2.y - v1.y * v2.x;
+	return atan2f(fabsf(dz) + MATH_FLOAT_SMALL, Vec2::dot(v1, v2));
+}
+//以指定的点point旋转angle角（以线段的锚点为中心旋转）
+void Hero::rotate(Vec2& point, float angle)
+{
+	float sinAngle = std::sin(angle);
+	float cosAngle = std::cos(angle);
+	auto x = point.x;
+	auto y = point.y;
+	//如果旋转点为（0，0）点
+	if (point.isZero())
+	{
+		float tempX = x * cosAngle - y * sinAngle;
+		y = y * cosAngle + x * sinAngle;
+		x = tempX;
+	}
+	//旋转点不在原点
+	else
+	{
+		//先移动到原点
+		float tempX = x - point.x;
+		float tempY = y - point.y;
 
+		//旋转完再移动回去
+		x = tempX * cosAngle - tempY * sinAngle + point.x;
+		y = tempY * cosAngle + tempX * sinAngle + point.y;
+	}
+}
+
+void Hero::soldierPositionInit(cocos2d::Point position)
+{
+	m_pHeroSprite = Sprite::create("Hero/" + m_pHeroSpriteName + ".png");
+	m_pHeroSprite->setScale(2.0f);
+	//m_pHeroSprite->setAnchorPoint(Vec2(0.5f, 0.5f));
+	this->bindSprite(m_pHeroSprite);
+	this->genePhysicsBody();
+	this->setPosition(position);
+	/*m_pHeroSprite->setPosition(Vec2(100,100));*/
+	
+	
+	auto* weapon = Sword::create();
+	if (weapon == nullptr) {
+		log("the weapon can't be created");
+	}
+	this->setMainWeapon(weapon);
+}
+void Hero::setMainWeapon(Weapon* pWeapon)
+{
+	this->m_pHeroSprite->addChild(pWeapon, 2);
+	pWeapon->setState(true);
+	pWeapon->setAnchorPoint(Vec2(0,0));
+	pWeapon->setPosition(Point((m_pHeroSprite->getContentSize()) / 2));
+	/*auto w = m_pHeroSprite->getContentSize().width;
+	auto h = m_pHeroSprite->getContentSize().height;
+	pWeapon->setPosition(w/2,h/2);*/
+	pWeapon->setScale(1.0f,1.0f);
+	m_pMainWeapon = pWeapon;
+	log("Weapon set!!");
+}
+
+Weapon* Hero::getMainWeapon()
+{
+	return m_pMainWeapon;
+}
+Sprite* Hero::getSprite()
+{
+	return m_pHeroSprite;
+}
+
+Animate* Hero::createAnimate(const std::string pActionName)
+{
+	/* 加载图片帧到缓存池 */
+	SpriteFrameCache* frameCache = SpriteFrameCache::getInstance();
+	frameCache->addSpriteFramesWithFile(pActionName + ".plist", pActionName + ".png");
+
+	int iFrameNum = 4;
+	SpriteFrame* frame = NULL;
+	Vector<SpriteFrame*> frameVec;
+
+	/* 用一个列表保存所有SpriteFrame对象 */
+	for (int i = 1; i <= iFrameNum; i++) {
+		/* 从SpriteFrame缓存池中获取SpriteFrame对象 */
+		switch (getM_nowFacing())
+		{
+			case QS::kUp:
+				frame = frameCache->getSpriteFrameByName(StringUtils::format("W0%d.png", i));
+				break;
+			case QS::kDown:
+				frame = frameCache->getSpriteFrameByName(StringUtils::format("S0%d.png", i));
+				break;
+			case QS::kRight:
+				frame = frameCache->getSpriteFrameByName(StringUtils::format("D0%d.png", i));
+				break;
+			case QS::kLeft:
+				frame = frameCache->getSpriteFrameByName(StringUtils::format("A0%d.png", i));
+				break;
+			default:
+				log("didn't find ");
+		}
+		frameVec.pushBack(frame);
+	}
+
+	/* 使用SpriteFrame列表创建动画对象 */
+	Animation* animation = Animation::createWithSpriteFrames(frameVec, 0.1f, 1);
+
+	/* 将动画包装成一个动作 */
+	Animate* action = Animate::create(animation);
+
+	/*清除缓存*/
+	AnimationCache::destroyInstance();
+	SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();
+	//TextureCache::getInstance()->removeUnusedTextures();
+
+	return action;
+}
+
+void Hero::update(float dt ) {//detect every seconds what have done
 	const auto leftArrow = EventKeyboard::KeyCode::KEY_LEFT_ARROW,
 		rightArrow = EventKeyboard::KeyCode::KEY_RIGHT_ARROW,
 		upArrow = EventKeyboard::KeyCode::KEY_UP_ARROW,
@@ -489,68 +217,212 @@ void Hero::roleMoveUpdate(float delta ) {//detect every seconds what have done
 		leftA = EventKeyboard::KeyCode::KEY_A,
 		rightD = EventKeyboard::KeyCode::KEY_D,
 		upW = EventKeyboard::KeyCode::KEY_W,
-		downS = EventKeyboard::KeyCode::KEY_S;
-
-	if (isKeyPressed(leftArrow)|| isKeyPressed(leftA)) {
+		downS = EventKeyboard::KeyCode::KEY_S,
+		space = EventKeyboard::KeyCode::KEY_SPACE;
+	
+	if ((isKeyPressed(leftArrow) || isKeyPressed(leftA))&& ableToSingleMove) {
 		log("Left!!");
 		keyPressedDuration(leftArrow);
+		//getMainWeapon()->setPosition(Vec2(2, 12));
+		getMainWeapon()->getWeaponSprite()->setFlippedX(true);
+		getMainWeapon()->getWeaponSprite()->setFlippedY(false);
+		ableToSingleMove = false;
 		return;
 	}
-	else if (isKeyPressed(rightArrow)|| isKeyPressed(rightD)) {
+	else if ((isKeyPressed(rightArrow) || isKeyPressed(rightD)) && ableToSingleMove) {
 		keyPressedDuration(rightArrow);
+		//getMainWeapon()->setPosition(Vec2(22, 22));
+		getMainWeapon()->getWeaponSprite()->setFlippedX(false);
+		getMainWeapon()->getWeaponSprite()->setFlippedY(false);
 		log("Right!!");
+		ableToSingleMove = false;
 		return;
 	}
-	else if (isKeyPressed(upArrow)|| isKeyPressed(upW)) {
+	else if ((isKeyPressed(upArrow) || isKeyPressed(upW)) && ableToSingleMove) {
 		keyPressedDuration(upArrow);
 		log("Up!!");
+		ableToSingleMove = false;
 		return;
 	}
-	else if (isKeyPressed(downArrow)|| isKeyPressed(downS)) {
+	else if ((isKeyPressed(downArrow) || isKeyPressed(downS)) && ableToSingleMove) {
 		keyPressedDuration(downArrow);
 		log("Down!!");
+		ableToSingleMove = false;
+		return;
+	}
+	else if ((isKeyPressed(space) || isKeyPressed(space)) && ableToSingleMove) {
+		keyPressedDuration(space);
+		log("Down!!");
+		ableToSingleMove = false;
 		return;
 	}
 	else {
 		return;
 	}
-}
 
+}
 
 void Hero::keyPressedDuration(EventKeyboard::KeyCode code) {
 	log("keyPressedDuration");
-	
+
 	switch (code) {
 		case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
-		case EventKeyboard::KeyCode::KEY_A:{
-			m_nowFacing = QS::kLeft;
-			move(m_nowFacing,QS::kSoldier1);
-			m_nowFacing = -1;
+		case EventKeyboard::KeyCode::KEY_A: {
+			setM_nowFacing (QS::kLeft);
+			move(getM_nowFacing(), m_pHeroSpriteName);
+			//m_nowFacing = -1;
 			break;
 		}
-		case EventKeyboard::KeyCode::KEY_RIGHT_ARROW: 
-		case EventKeyboard::KeyCode::KEY_D:{
-			m_nowFacing = QS::kRight;
-			move(m_nowFacing, QS::kSoldier1);
-			m_nowFacing = -1;
+		case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+		case EventKeyboard::KeyCode::KEY_D: {
+			setM_nowFacing(  QS::kRight);
+			move(getM_nowFacing(), m_pHeroSpriteName);
+			//m_nowFacing = -1;
 			break;
 		}
-		case EventKeyboard::KeyCode::KEY_UP_ARROW: 
-		case EventKeyboard::KeyCode::KEY_W:{
-			m_nowFacing = QS::kUp;
-			move(m_nowFacing, QS::kSoldier1);
-			m_nowFacing = -1;
+		case EventKeyboard::KeyCode::KEY_UP_ARROW:
+		case EventKeyboard::KeyCode::KEY_W: {
+			setM_nowFacing ( QS::kUp);
+			move(getM_nowFacing(), m_pHeroSpriteName);
+			//m_nowFacing = -1;
 			break;
 		}
-		case EventKeyboard::KeyCode::KEY_DOWN_ARROW: 
-		case EventKeyboard::KeyCode::KEY_S:{
-			m_nowFacing = QS::kDown;
-			move(m_nowFacing, QS::kSoldier1);
-			m_nowFacing = -1;
+		case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
+		case EventKeyboard::KeyCode::KEY_S: {
+			setM_nowFacing(QS::kDown);
+			move(getM_nowFacing(), m_pHeroSpriteName);
+			//m_nowFacing = -1;
+			break;
+		}
+		case EventKeyboard::KeyCode::KEY_SPACE:{
+			move(getM_nowFacing(), m_pHeroSpriteName);
+			//m_nowFacing = -1;
 			break;
 		}
 		default:
 			break;
 	}
-	
+
 }
+void Hero::move(int face, const std::string pAnimateName) {
+	log("move!!");
+	// 0.3s duration
+	int offsetX = 0, offsetY = 0;
+
+	const int speedEveryPress = 20;
+
+	Animate* movingAction;
+
+	log("face %d", face);
+	switch (face) {
+		case QS::kDown: {
+			offsetY = -speedEveryPress;
+			movingAction = createAnimate("Hero/" + pAnimateName + "Down");
+			log("pMoveAction down end!");
+			break;
+		}
+		case QS::kUp: {
+			offsetY = speedEveryPress;
+			movingAction = createAnimate("Hero/" + pAnimateName + "Up");
+			log("pMoveAction up end!");
+			break;
+		}
+		case QS::kLeft: {
+			offsetX = -speedEveryPress;
+			movingAction = createAnimate("Hero/" + pAnimateName + "LeftDown");
+			log("pMoveAction left end!");
+			break;
+		}
+		case QS::kRight: {
+			offsetX = speedEveryPress;
+			movingAction = createAnimate("Hero/" + pAnimateName + "RightDown");
+			log("pMoveAction right end!");
+			break;
+		}
+		default: {
+			log("invalid keybpard");
+		}
+	}
+
+	if (getIsHitWall())
+	{
+		log("Move Hit Wall!!!");
+		offsetX = -offsetX;
+		offsetY = -offsetY;
+		setHitWall(false);
+		this->m_pHeroSprite->runAction(MoveBy::create(0.2f, Vec2(offsetX, offsetY)));
+		return;
+	}
+
+	auto moveBy = MoveBy::create(0.2f, Vec2(offsetX, offsetY));
+
+	auto finalAction = Spawn::createWithTwoActions(moveBy, movingAction);
+	
+	this->m_pHeroSprite->runAction(finalAction);
+	return;
+}
+
+void Hero::setHitWall(bool isHitWall)
+{
+	m_isHitWall = isHitWall;
+	log("is hit");
+}
+bool Hero::getIsHitWall()
+{
+	log("get hit");
+	return m_isHitWall;
+}
+void Hero::setPresentContactItem(Item* pItem)
+{
+	m_pPresentContactItem = pItem;
+}
+
+Item* Hero::getPresentContactItem()
+{
+	return m_pPresentContactItem;
+}
+//Item中函数的实现
+bool Item::onContactSeparate(PhysicsContact& contact)
+{
+	auto nodeA = contact.getShapeA()->getBody()->getNode();
+	auto nodeB = contact.getShapeB()->getBody()->getNode();
+	if (nodeA != nullptr && nodeB != nullptr)
+	{
+		if ((nodeA->getName() == QS::Name::kHero || nodeB->getName() == QS::Name::kHero)
+			&& (nodeA->getName() == this->getName() || nodeB->getName() == this->getName()))
+		{
+			if (Hero::getPresentContactItem() == this)
+			{
+				log("item seperate");
+				Hero::setPresentContactItem(nullptr);
+				//m_pMessage->setVisible(false);
+			}
+		}
+	}
+	return true;
+}
+
+bool Item::onContactBegin(PhysicsContact& contact)
+{
+	auto nodeA = contact.getShapeA()->getBody()->getNode();
+	auto nodeB = contact.getShapeB()->getBody()->getNode();
+	if (nodeA != nullptr && nodeB != nullptr)
+	{
+		if ((nodeA->getName() == QS::Name::kHero || nodeB->getName() == QS::Name::kHero)
+			&& (nodeA->getName() == this->getName() || nodeB->getName() == this->getName()))
+		{
+			if (Hero::getPresentContactItem() == nullptr)
+			{
+				log("near item");
+				Hero::setPresentContactItem(this);
+				//m_pMessage->setVisible(true);
+			}
+		}
+	}
+	return false;
+}
+
+
+
+
+

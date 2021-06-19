@@ -4,11 +4,10 @@
 *@date 5/27/2021
 */
 
+#include"GlobalParameter.h"
+
 #include "MyMenu.h"
-#include "HomePage.h"
-#include "MenuSettings.h"
-#include "MenuHelp.h"
-#include "cocos2d.h"
+
 
 USING_NS_CC;
 
@@ -63,7 +62,7 @@ bool MyMenu::init()
     //settingsItem->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
 
 
- 
+
 
     //auto* helpItemImage = MenuItemImage::create(
     //    "button/HELP-normal.png",
@@ -77,7 +76,7 @@ bool MyMenu::init()
     //helpItem->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 4));
 
     MenuItemFont::setFontName("POBG");
-    MenuItemFont::setFontSize(250);
+    MenuItemFont::setFontSize(150);
 
     MenuItemFont* startItem = MenuItemFont::create("Start",
         CC_CALLBACK_1(MyMenu::menuStartCallback, this));
@@ -165,6 +164,25 @@ void MyMenu::menuStartCallback(Ref* pSender)
     MenuItem* item = (MenuItem*)pSender;
     log("Touch Start MenuItem %p", item);
 
+    if (isEffect) {
+        auto soundEffectID = AudioEngine::play2d("sound/Blip.mp3", false);//°´¼üÉù
+        log("soundEffect%d is on", soundEffectID);
+        //°´¼üÉù
+    }
+
+    auto changeSceneAnmiate = SceneChangeLoad::createScene();
+    if (changeSceneAnmiate == nullptr) {
+        log("failed change scene create!");
+    }
+    else {
+        log("123 1");
+        //Director::getInstance()->pushScene(changeSceneAnmiate);
+        //Director::getInstance()->replaceScene(TransitionMoveInT::create(3.0f, changeSceneAnmiate));
+        //Director::getInstance()->popScene();
+    }
+
+    Sleep(1000);
+
     auto scene = HomePage::createScene();
     Director::getInstance()->pushScene(scene);
 }
@@ -173,12 +191,24 @@ void MyMenu::menuJoinGameCallback(cocos2d::Ref* pSender)
 {
     MenuItem* item = (MenuItem*)pSender;
     log("Touch Join Game MenuItem %p", item);
+    if (isEffect) {
+        auto soundEffectID = AudioEngine::play2d("sound/Blip.mp3", false);//°´¼üÉù
+        log("soundEffect%d is on", soundEffectID);
+        //°´¼üÉù
+    }
 }
 
 void MyMenu::menuSettingsCallback(Ref* pSender)
 {
     MenuItem* item = (MenuItem*)pSender;
     log("Touch Settings MenuItem %p", item);
+
+    if (isEffect) {
+        auto soundEffectID = AudioEngine::play2d("sound/Blip.mp3", false);//°´¼üÉù
+        log("soundEffect%d is on", soundEffectID);
+        //°´¼üÉù
+    }
+
     auto scene = MenuSettings::createScene();
     Director::getInstance()->pushScene(scene);
 }
@@ -187,6 +217,13 @@ void MyMenu::menuHelpCallback(Ref* pSender)
 {
     MenuItem* item = (MenuItem*)pSender;
     log("Touch Help MenuItem %p", item);
+
+    if (isEffect) {
+        auto soundEffectID = AudioEngine::play2d("sound/Blip.mp3", false);//°´¼üÉù
+        log("soundEffect%d is on", soundEffectID);
+        //°´¼üÉù
+    }
+
     auto scene = MenuHelp::createScene();
     Director::getInstance()->pushScene(scene);
 }

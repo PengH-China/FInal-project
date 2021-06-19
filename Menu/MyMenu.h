@@ -2,7 +2,11 @@
 #ifndef __MY_MENU_H__
 #define __MY_MENU_H__
 
+#include "HomePage.h"
+#include "MenuSettings.h"
+#include "MenuHelp.h"
 #include "cocos2d.h"
+#include"SceneChangeLoad.h"
 
 USING_NS_CC;
 
@@ -20,6 +24,7 @@ public:
     void menuJoinGameCallback(cocos2d::Ref* pSender);//join
     void menuSettingsCallback(cocos2d::Ref* pSender);//settings
     void menuHelpCallback(cocos2d::Ref* pSender);//help
+    void menuExitCallback(cocos2d::Ref* pSender);//exit
 
 
     // a selector callback

@@ -11,6 +11,7 @@
 #include "Const/Const.h"
 #include "ui/CocosGUI.h"
 
+
 using namespace cocos2d;
 
 /**
@@ -36,31 +37,28 @@ public:
 	*@brief 交互函数
 	*@author 蔡明宏
 	*/
-	virtual void interact() = 0;
+	/*virtual void interact() = 0;*/
 
 	/**
 	*@brief 修改m_pPresentContactItem
 	*@author 蔡明宏
 	*/
-	//virtual bool onContactBegin(PhysicsContact& contact);
-	//virtual bool onContactSeparate(PhysicsContact& contact);
+	virtual bool onContactBegin(PhysicsContact& contact);
+	virtual bool onContactSeparate(PhysicsContact& contact);
 
 	/**
 	*@brief 设置物理体
 	*@author 蔡明宏
 	*/
-	void generatePhysicalBody(std::string message, const std::string itemName);
+	void generatePhysicalBody(std::string message, int itemTag);
 
 protected:
 	Sprite* m_pSprite;
-	//ui::Scale9Sprite* m_pMessage;
-	//ui::Scale9Sprite* m_pShopMessage;
 };
 
 /**
 *@brief 辅助函数，用于显示信息
 *@author 蔡明宏
 */
-//ui::Scale9Sprite* showMessage(const std::string& message);
 #endif
 #pragma once

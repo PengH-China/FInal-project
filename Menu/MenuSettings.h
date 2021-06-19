@@ -4,13 +4,12 @@
 
 #include "cocos2d.h"
 #include "AudioEngine.h"
-
+#include "GlobalPara/GlobalParameter.h"
 USING_NS_CC;
 
 class MenuSettings : public cocos2d::Scene
 {
-    bool isEffect = false;
-    bool isMusic = false;
+
 public:
     static Scene* createScene();
 
