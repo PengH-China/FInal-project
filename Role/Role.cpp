@@ -5,9 +5,11 @@ void Role::bindSprite(Sprite* pSprite) {
 	this->addChild(m_sprite);
 }
 
-bool Role::genePhysicsBody() {
-	auto body = PhysicsBody::createBox(m_sprite->getContentSize(),
-		PhysicsMaterial(1.0f, 1.0f, 0.0f));
+bool Role::genePhysicsBody(int tag) {
+	/*auto body = PhysicsBody::createBox(m_sprite->getContentSize(),
+		PhysicsMaterial(1.0f, 1.0f, 0.0f));*/
+	auto body = PhysicsBody::createBox(Size(31,31),
+		PhysicsMaterial(1.0f, 1.0f, 0.0f)); 
 	body->setMass(1e10);
 	//body->setPositionOffset(Vec2(m_sprite->getContentSize().width / 2, m_sprite->getContentSize().height / 2));
 	body->setGravityEnable(false);
@@ -19,12 +21,11 @@ bool Role::genePhysicsBody() {
 
 	//set initial velocity of physicsBody
 
-
 	body->setCategoryBitmask(1);
 	body->setCollisionBitmask(1);
 	body->setContactTestBitmask(1);
 	m_sprite->setPhysicsBody(body);
-	m_sprite->setTag(QS::kHeroTag);
+	m_sprite->setTag(tag);
 	//m_sprite->addComponent(body);
 	return true;
 }

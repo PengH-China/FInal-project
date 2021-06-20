@@ -58,6 +58,7 @@ bool SceneChangeLoad::init(){
     }
     //Director::getInstance()->end();
 
+
 }
 
 Animate* SceneChangeLoad::createAnimate(){
@@ -89,3 +90,4 @@ Animate* SceneChangeLoad::createAnimate(){
 
     return action;
 }
+

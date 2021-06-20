@@ -12,10 +12,7 @@ class NormalGun :public Weapon
 {
 public:
 	CREATE_FUNC(NormalGun);
-	/**
-	*@brief 创造子弹
-	*@author 蔡明宏
-	*/
+	
 	Bullet* createBullet() override;
 
 	bool init() override;

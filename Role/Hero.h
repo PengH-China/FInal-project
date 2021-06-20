@@ -10,6 +10,7 @@
 #include "cocos2d.h"
 #include "Role/Role.h"
 #include "Item/NormalGun.h"
+#include "Item/ShotGun.h"
 #include "Item/Sword.h"
 #include "Item/Item.h"
 #include "Const/Const.h"
@@ -25,7 +26,6 @@ public:
 	virtual bool init();
 	//CREATE_FUNC(Soldier);
 
-
 	//动作生成
 	Animate* createAnimate(const std::string  pActionName);
 
@@ -40,9 +40,7 @@ public:
 	//撞墙检测
 	void setHitWall(bool m_isHitWall);
 	bool getIsHitWall();
-	//旋转
-	float angle(const Vec2& v1, const Vec2& v2);
-	void rotate(Vec2& point, float angle);
+
 	void update(float dt = 0.4f);
 	//设置交互物品
 	static void setPresentContactItem(Item* pItem);
@@ -56,11 +54,11 @@ public:
 	Weapon* getMainWeapon();
 
 	CC_SYNTHESIZE(int, _m_nomFacing, M_nowFacing);
-
-	CC_SYNTHESIZE(int, m_coinNumber, CoinNumber);
-	CC_SYNTHESIZE(int, m_speed, speed);
 	CC_SYNTHESIZE(int, m_score, Score);
+	//背包里的子弹数量
+	CC_SYNTHESIZE(int, m_bulletCountInHero,BulletCountInHero);
 
+	bool judgeHeroDie();
 
 	std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keys;
 

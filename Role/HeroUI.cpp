@@ -5,7 +5,7 @@
 */
 
 #include "HeroUI.h"
-
+#include "GlobalPara/GlobalParameter.h"
 bool HeroUI::init()
 {
 	m_pBoard = Sprite::create("Item/UI/UI-board.png");
@@ -16,11 +16,10 @@ bool HeroUI::init()
 	m_pPresentHero = globalHero;
 	m_presentHP = m_pPresentHero->getHealth();
 	m_presentArmor = m_pPresentHero->getArmor();
-	m_presentAttack = m_pPresentHero->getFirePower();
-	m_presentCoin = m_pPresentHero->getCoinNumber();
-	m_presentSpeed = m_pPresentHero->getspeed();
+	m_presentBulletHero = m_pPresentHero->getBulletCountInHero();
+	m_presentBulletWeapon = m_pPresentHero->getMainWeapon()->getBulletCount();
+	m_presentTime = g_iDuration;
 	m_presentScore = m_pPresentHero->getScore();
-
 
 	m_pHealth = ProgressTimer::create(Sprite::create("Item/UI/HP-UI.png"));
 	m_pHealth->setScale(0.58f);
@@ -42,15 +41,16 @@ bool HeroUI::init()
 		/ static_cast<float>(m_pPresentHero->getMaxArmor()) * 100);
 	this->addChild(m_pArmor, 2);
 
-	m_pFirepower = ProgressTimer::create(Sprite::create("Item/UI/Attack-UI.png"));
-	m_pFirepower->setScale(0.58f);
-	m_pFirepower->setPosition(-37.5f, -30.f);
-	m_pFirepower->setType(ProgressTimer::Type::BAR);
-	m_pFirepower->setMidpoint(Point(0, 0.5));
-	m_pFirepower->setBarChangeRate(Point(1, 0));
-	m_pFirepower->setPercentage(static_cast<float>(m_pPresentHero->getFirePower())
-		/ static_cast<float>(m_pPresentHero->getMaxFirePower()) * 100);
-	this->addChild(m_pFirepower, 2);
+	//子弹列表的统计
+	m_pWeaponBullet = ProgressTimer::create(Sprite::create("Item/UI/Bullet-UI.png"));
+	m_pWeaponBullet->setScale(0.58f);
+	m_pWeaponBullet->setPosition(-37.5f, -30.f);
+	m_pWeaponBullet->setType(ProgressTimer::Type::BAR);
+	m_pWeaponBullet->setMidpoint(Point(0, 0.5));
+	m_pWeaponBullet->setBarChangeRate(Point(1, 0));
+	m_pWeaponBullet->setPercentage(static_cast<float>(m_presentBulletWeapon)
+		/ static_cast<float>(m_presentBulletHero) * 100);
+	this->addChild(m_pWeaponBullet, 2);
 
 	std::string healthMessage = std::to_string(m_pPresentHero->getHealth()) + "/" +
 		std::to_string(m_pPresentHero->getMaxHealth());
@@ -64,29 +64,28 @@ bool HeroUI::init()
 	m_pArmorMessage->setPosition(-37.5f, 3.f);
 	this->addChild(m_pArmorMessage, 3);
 
-	std::string attackMessage = std::to_string(m_pPresentHero->getFirePower()) + "/" +
-		std::to_string(m_pPresentHero->getMaxFirePower());
-	m_pAttackMessage = Label::createWithTTF(attackMessage, "fonts/IRANYekanBold.ttf", 18.f);
-	m_pAttackMessage->setPosition(-37.5f, -30.f);
-	this->addChild(m_pAttackMessage, 3);
+	std::string bulletWeaponMessage = std::to_string(m_presentBulletWeapon) + "/" +
+		std::to_string(m_pPresentHero->getMainWeapon()->getBulletCountMax());
+	m_pBulletWeaponMessage = Label::createWithTTF(bulletWeaponMessage, "fonts/IRANYekanBold.ttf", 18.f);
+	m_pBulletWeaponMessage->setPosition(-37.5f, -30.f);
+	this->addChild(m_pBulletWeaponMessage, 3);
 
-	std::string coinMessage = std::to_string(m_pPresentHero->getCoinNumber());
-	m_pCoinMessage = Label::createWithTTF(coinMessage, "fonts/IRANYekanBold.ttf", 24.f);
-	m_pCoinMessage->setPosition(150.f, 40.f);
-	this->addChild(m_pCoinMessage, 3);
+	std::string bulletHeroMessage = std::to_string(m_pPresentHero->getBulletCountInHero());
+	m_pBulletHeroMessage = Label::createWithTTF(bulletHeroMessage, "fonts/IRANYekanBold.ttf", 24.f);
+	m_pBulletHeroMessage->setPosition(150.f, 40.f);
+	this->addChild(m_pBulletHeroMessage, 3);
 
-	std::string speedMessage = std::to_string(m_pPresentHero->getspeed());
-	m_pSpeedMessage = Label::createWithTTF(speedMessage, "fonts/IRANYekanBold.ttf", 24.f);
-	m_pSpeedMessage->setPosition(150.f, 3.f);
-	this->addChild(m_pSpeedMessage, 3);
+	std::string timeMessage = "0:00";//+std::to_string(m_iDuration);
+	m_pTimeMessage = Label::createWithTTF(timeMessage, "fonts/IRANYekanBold.ttf", 24.f);
+	m_pTimeMessage->setPosition(150.f, 3.f);
+	this->addChild(m_pTimeMessage, 3);
 
 	std::string scoreMessage = std::to_string(m_pPresentHero->getScore());
 	m_pScoreMessage = Label::createWithTTF(scoreMessage, "fonts/IRANYekanBold.ttf", 24.f);
-	m_pScoreMessage->setPosition(150.f, -35.f);
+	m_pScoreMessage->setPosition(150.f, -35.f );
 	this->addChild(m_pScoreMessage, 3);
 
 	schedule(CC_SCHEDULE_SELECTOR(HeroUI::scheduleUpdateUI), 0.1f);
-
 
 	return true;
 }
@@ -113,31 +112,37 @@ void HeroUI::scheduleUpdateUI(float dt)
 		m_pArmorMessage->setString(armorMessage);
 	}
 
-	if (m_pPresentHero->getFirePower() != m_presentAttack)
+	if (m_pPresentHero->getMainWeapon()->getBulletCount()!=m_presentBulletWeapon)
 	{
-		m_presentAttack = m_pPresentHero->getFirePower();
-		m_pFirepower->setPercentage(static_cast<float>(m_pPresentHero->getFirePower())
-			/ static_cast<float>(m_pPresentHero->getMaxFirePower()) * 100);
-		std::string attackMessage = std::to_string(m_pPresentHero->getFirePower()) + "/" +
-			std::to_string(m_pPresentHero->getMaxFirePower());
-		m_pArmorMessage->setString(attackMessage);
+		m_presentBulletWeapon = m_pPresentHero->getMainWeapon()->getBulletCount();
+		m_pWeaponBullet->setPercentage(static_cast<float>(m_presentBulletWeapon)
+			/ static_cast<float>(m_pPresentHero->getMainWeapon()->getBulletCountMax()) * 100);
+		std::string bulletMessage = std::to_string(m_presentBulletWeapon) + "/" +
+			std::to_string(m_pPresentHero->getMainWeapon()->getBulletCountMax());
+		m_pBulletWeaponMessage->setString(bulletMessage);
 	}
-	if (m_pPresentHero->getCoinNumber() != m_presentCoin)
+	
+	if (m_pPresentHero->getBulletCountInHero() != m_presentBulletHero)
 	{
-		m_presentCoin = m_pPresentHero->getCoinNumber();
-		std::string coinMessage = std::to_string(m_pPresentHero->getCoinNumber());
-		m_pCoinMessage->setString(coinMessage);
+		m_presentBulletHero = m_pPresentHero->getBulletCountInHero();
+		std::string bulletHeroMessage = std::to_string(m_presentBulletHero);
+		m_pBulletHeroMessage->setString(bulletHeroMessage);
 	}
-	if (m_pPresentHero->getspeed() != m_presentSpeed)
+	if (1)
 	{
-		m_presentSpeed = m_pPresentHero->getspeed();
-		std::string speedMessage = std::to_string(m_pPresentHero->getspeed());
-		m_pCoinMessage->setString(speedMessage);
+		std::string speedMessage;
+		if (g_iDuration % 60 < 10) {
+			speedMessage = std::to_string(g_iDuration / 60) + ":0" + std::to_string(g_iDuration % 60);
+		}
+		else {
+			speedMessage = std::to_string(g_iDuration / 60) + ':' + std::to_string(g_iDuration % 60);
+		}
+		m_pTimeMessage->setString(speedMessage);
 	}
 	if (m_pPresentHero->getScore() != m_presentScore)
 	{
 		m_presentScore = m_pPresentHero->getScore();
 		std::string scoreMessage = std::to_string(m_pPresentHero->getScore());
-		m_pCoinMessage->setString(scoreMessage);
+		m_pScoreMessage->setString(scoreMessage);
 	}
 }

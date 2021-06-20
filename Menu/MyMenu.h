@@ -2,11 +2,11 @@
 #ifndef __MY_MENU_H__
 #define __MY_MENU_H__
 
-#include "HomePage.h"
+#include "Scene/HomePage.h"
 #include "MenuSettings.h"
 #include "MenuHelp.h"
 #include "cocos2d.h"
-#include"SceneChangeLoad.h"
+#include"Scene/SceneChangeLoad.h"
 
 USING_NS_CC;
 

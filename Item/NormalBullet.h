@@ -1,13 +1,8 @@
-/*
-* @file NormalBullet.h
-* @author:²ÌÃ÷ºê
-* @time:2021/5/29
-*/
 
 #ifndef _NORMALBULLET_H_
 #define _NORMALBULLET_H_
 
-#include "Bullet.h"
+#include "Item/Bullet.h"
 #include "Role/Hero.h"
 class NormalBullet :public Bullet
 {

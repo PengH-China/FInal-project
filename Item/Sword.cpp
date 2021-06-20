@@ -4,17 +4,28 @@
 
 bool Sword::init()
 {
+	scheduleUpdate();
+
+	auto listenerKeyboard = EventListenerKeyboard::create();
+	//¼üÅÌÊÂ¼þÏìÓ¦º¯Êý
+	listenerKeyboard->onKeyPressed = CC_CALLBACK_2(Weapon::onKeyPressed, this);
+	listenerKeyboard->onKeyReleased = CC_CALLBACK_2(Weapon::onKeyReleased, this);
+	//×¢²á¼üÅÌ¼àÌý
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listenerKeyboard, this);
+
     log("Trying to create sword");
     Sprite* pSprite = Sprite::create("Item/Sword-1.png");
     m_pSpriteWeapon = pSprite;
     bindSprite(pSprite);
 	generatePhysicalBody(QS::message::kSwordMessage, QS::kHeroSwordRestingTag);
     //ÄæÊ±ÕëÐý×ª60¶È
-    //pSprite->setRotation(-40.f); 
-    setInterval(.2f);
-    setBulletCount(0);
-    setDamage(4);
-	pSprite->setScale(0.6f);
+    //pSprite->setRotation(-40.f);
+	setWeaponName(QS::Name::kSwordWeapon);
+    Weapon::setInterval(.2f);
+	Weapon::setBulletCount(-1);
+    Weapon::setDamage(4);
+	Weapon::setState(false);
+	pSprite->setScale(.6f);
     return true;
 }
 

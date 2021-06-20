@@ -28,7 +28,20 @@ namespace QS
 		kMonsterBulletTag = 4,
 		kHeroSwordAttackingTag = 5,
 		kHeroSwordRestingTag = 6,
-		kBoxTag = 7;
+		kBoxTag = 7,
+		kBulletBoxTag = 8,
+		kHealthBoxTag = 9,
+		kCapacityBoxTag=10;
+
+	const int kMapLayerPriority = 0,
+		kBarrierPriority = 1,
+		kBoxPriority = 2,
+		kHeroPriority = 5,
+		kMonsterPriority = 5,
+		kBulletPriority = 4,
+		kFloorGunPriority = 4,
+		kUIPriority = 6;
+
 
 
 	enum class Kind
@@ -70,7 +83,7 @@ namespace QS
 		static const std::string kCoin = "Coin";
 		static const std::string kHealthPotion = "HealthPotion";
 		static const std::string kArmorPotion = "ArmorPotion";
-		static const std::string kGunWeapon = "GunWeapon";
+		static const std::string kNormalGunWeapon = "NormalGunWeapon";
 		static const std::string kShotgunWeapon = "ShotgunWeapon";
 		static const std::string kSwordWeapon = "SwordWeapon";
 		static const std::string kSpearWeapon = "SpearWeapon";

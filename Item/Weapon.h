@@ -1,8 +1,4 @@
-/**
-*@file Weapon.h
-*@author 蔡明宏
-*@date 5/28/2021
-*/
+
 #ifndef _WEAPON_H_
 #define _WEAPON_H_
 
@@ -14,70 +10,29 @@ using namespace cocos2d;
 class Weapon :public Item
 {
 public:
-	/*
-	* @brief:设置攻击力
-	* @author:蔡明宏
-	*/
-	void setDamage(int weaponDamage);
-	/*
-	* @brief:获取攻击力
-	* @author:蔡明宏
-	*/
-	int getDamage();
-	/**
-	*@brief 切换持有状态
-	*@author 蔡明宏
-	*/
-	void setState(bool isInHand);
+	CC_SYNTHESIZE(int, m_damage, Damage);
+	CC_SYNTHESIZE(bool, m_state, State);
+	CC_SYNTHESIZE(int, m_interval, Interval);
+	//武器现有子弹数量
+	CC_SYNTHESIZE(int, m_bulletCount, BulletCount);
+	//武器最大子弹载量
+	CC_SYNTHESIZE(int, m_bulletCountMax, BulletCountMax);
+	CC_SYNTHESIZE(std::string, m_weaponName, WeaponName);
 
-	/*
-	* @brief:直接从成员变量处获取现在的持有状态
-	* @author:蔡明宏
-	*/
-	bool getState();
-	/**
-	*@brief 与手中武器交换
-	@@author 蔡明宏
-	*/
-	/*void interact() override;*/
-	//TODO:与地面武器交换
-
-	/**
-	*@brief 设置武器发射速度
-	*@author 蔡明宏
-	*/
-	void setInterval(float interval);
-	/**
-	*@brief 获取武器发射速度
-	*@author 蔡明宏
-	*/
-	float getInterval();
-
-	/**
-	*@brief 获取武器一次发射几枚子弹
-	*@author 蔡明宏
-	*/
-	int getBulletCount();
-	/**
-	*@brief 设置武器一次发射几枚子弹
-	*@author 蔡明宏
-	*/
-	void setBulletCount(int count);
-
-	/**
-	*@brief 创造子弹
-	*@author 蔡明宏
-	*/
 	virtual Bullet* createBullet();
 
-	
+	bool isKeyPressed(EventKeyboard::KeyCode keyCode);
+	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
+	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
+
+	//换枪
+	void interact();
+
+	void update(float dt=0.4f);
 	Sprite* getWeaponSprite();
 protected:
 	Sprite* m_pSpriteWeapon = nullptr;
-	bool m_isInHand = false;
-	int m_weaponDamage;
-	float m_attackInterval;
-	int m_bulletCount;
+	std::map<cocos2d::EventKeyboard::KeyCode, bool> m_keys;
 };
 
 #endif // !_WEAPON_H_
