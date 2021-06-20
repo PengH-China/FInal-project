@@ -22,10 +22,10 @@ bool Sword::init()
     //pSprite->setRotation(-40.f);
 	setWeaponName(QS::Name::kSwordWeapon);
     Weapon::setInterval(.2f);
-    Weapon::setBulletCount(0);
+	Weapon::setBulletCount(-1);
     Weapon::setDamage(4);
 	Weapon::setState(false);
-	pSprite->setScale(0.6f);
+	pSprite->setScale(.6f);
     return true;
 }
 

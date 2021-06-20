@@ -4,7 +4,7 @@
 *@date 5/27/2021
 */
 
-#include"GlobalPara/GlobalParameter.h"
+#include "GlobalPara/GlobalParameter.h"
 
 #include "MyMenu.h"
 

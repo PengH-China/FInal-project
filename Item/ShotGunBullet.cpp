@@ -3,8 +3,8 @@
 
 void ShotGunBullet::attack(float direX, float direY, Point heroPoint, int curFacing, Node* sprite)
 {
-	float x = heroPoint.x; //+ (curFacing == 0 ? 25.0 : -25.0);
-	float y = heroPoint.y + (curFacing == 0 ? 25.0 : -25.0);// += 20.0;
+	float x = heroPoint.x;
+	float y = heroPoint.y + 15 ; 
 
 	this->setPosition(x, y);
 	//log("posAA x: %d  posAA y: %d", pos.x, pos.y);
@@ -26,7 +26,7 @@ bool ShotGunBullet::init()
 	//子弹精灵绑定在了子弹里
 	bindSprite(pShotGunBullet, QS::Kind::kSelf, QS::BulletShape::kCircle);
 
-	setSpeed(3);
+	setBulletSpeed(3);
 
 	m_isArrive = false;
 

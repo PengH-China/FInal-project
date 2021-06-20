@@ -4,13 +4,7 @@
 *@date 5/27/2021
 */
 
-#include"GlobalPara/GlobalParameter.h"
-
-
 #include "MenuHelp.h"
-#include "cocos2d.h"
-
-USING_NS_CC;
 
 Scene* MenuHelp::createScene()
 {
@@ -43,6 +37,15 @@ bool MenuHelp::init()
     MenuItemFont::setFontName("POBG");
     MenuItemFont::setFontSize(86);
 
+    auto introduction = Sprite::create("menu/Help/help.png");
+    if (introduction == nullptr) {
+        log("the help png is null");
+    }
+    else {
+        introduction->setAnchorPoint(Vec2(0.5f, 0.5f));
+        introduction->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
+        addChild(introduction);
+    }
 
     auto closeItem = MenuItemImage::create(
         "CloseNormal.png",

@@ -22,14 +22,30 @@ public:
 
     virtual Monster* createMonster(cocos2d::Point position) ;
 
-    virtual bool init();
+    MoveBy* createRandAction();
+    virtual bool init() override;
 
-    void scheduleUpdateUI(float dt);
+    void backIntoMap(int nowFacing);
+
+    void resetUI();
+
+    void judgeMonsterDie();
 
     CC_SYNTHESIZE(int, m_health, Health);
+    /*virtual inline void setHealth(int var, bool signal)
+    {
+        m_health = var;
+        if (this->getHealth() != m_presentHP)
+        {
+            m_presentHP = this->getHealth();
+            m_pHealth->setPercentage(static_cast<float>(this->getHealth())
+                / static_cast<float>(this->getMaxHealth()) * 100);
+        }
+    }*/
     CC_SYNTHESIZE(int, m_maxHealth, MaxHealth);
     CC_SYNTHESIZE(int, m_defence, Defence);
     CC_SYNTHESIZE(int, m_Attack, Attack);
+    CC_SYNTHESIZE(int, m_monsterFacing, MonsterFacing);
 
 
 protected:
@@ -37,7 +53,7 @@ protected:
     ProgressTimer* m_pHealth;
 
     int m_presentHP;
-
+    Sprite* m_pBackground;
     Sprite* m_pMonsterSprite;
     Animate* m_pMoveAnimation;
 };

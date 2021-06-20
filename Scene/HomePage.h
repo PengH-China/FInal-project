@@ -5,7 +5,7 @@
 #include "cocos2d.h"
 #include "GlobalPara/GlobalParameter.h"
 #include"SceneChangeLoad.h"
-#include "BattleScene.h"
+#include "Scene/BattleScene.h"
 
 #include <vector>
 

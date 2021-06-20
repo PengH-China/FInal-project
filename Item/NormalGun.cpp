@@ -32,10 +32,11 @@ bool NormalGun::init() {
 	pSprite->setPosition(0, 0);
 	generatePhysicalBody(QS::message::kGunMessage,QS::kHeroSwordRestingTag);
 	setWeaponName(QS::Name::kNormalGunWeapon);
-	Weapon::setDamage(1);
+	Weapon::setDamage(2);
 	Weapon::setInterval(.2f);
 	Weapon::setState(false);
 	//µ¯¼ÐÉèÎª30
 	Weapon::setBulletCount(30);
+	Weapon::setBulletCountMax(30);
 	return true;
 }

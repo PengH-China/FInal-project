@@ -246,7 +246,7 @@ void HomePage::startGameCallback(cocos2d::Ref* pSender)
 	MenuItem* item = (MenuItem*)pSender;
 	log("Touch start game Item %p", item);
 	TMXTiledMap* battleMap = TMXTiledMap::create("map1.tmx");
-	auto scene = BattleScene::createScene(battleMap);
+	auto scene = BattleScene::createScene();
 	Director::getInstance()->pushScene(scene);
 }
 

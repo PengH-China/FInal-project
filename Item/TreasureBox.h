@@ -6,7 +6,9 @@
 #include "cocos2d.h"
 #include "GlobalPara/GlobalParameter.h"
 #include "Const/Const.h"
-
+#include "BulletBuff.h"
+#include "HealthBuff.h"
+#include "CapacityBuff.h"
 class TreasureBox :
     public Item
 {

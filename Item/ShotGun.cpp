@@ -35,7 +35,8 @@ bool ShotGun::init() {
 	Weapon::setDamage(3);
 	Weapon::setInterval(.2f);
 	Weapon::setState(false);
-	//弹夹设为10
-	Weapon::setBulletCount(10);
+	//弹夹设为20
+	Weapon::setBulletCount(20);
+	Weapon::setBulletCountMax(20);
 	return true;
 }

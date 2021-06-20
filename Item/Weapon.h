@@ -13,7 +13,10 @@ public:
 	CC_SYNTHESIZE(int, m_damage, Damage);
 	CC_SYNTHESIZE(bool, m_state, State);
 	CC_SYNTHESIZE(int, m_interval, Interval);
+	//武器现有子弹数量
 	CC_SYNTHESIZE(int, m_bulletCount, BulletCount);
+	//武器最大子弹载量
+	CC_SYNTHESIZE(int, m_bulletCountMax, BulletCountMax);
 	CC_SYNTHESIZE(std::string, m_weaponName, WeaponName);
 
 	virtual Bullet* createBullet();

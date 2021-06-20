@@ -2,7 +2,7 @@
 #ifndef _NORMALBULLET_H_
 #define _NORMALBULLET_H_
 
-#include "Bullet.h"
+#include "Item/Bullet.h"
 #include "Role/Hero.h"
 class NormalBullet :public Bullet
 {

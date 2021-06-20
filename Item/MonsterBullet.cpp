@@ -28,8 +28,9 @@ bool MonsterBullet::init()
 	//子弹精灵绑定在了子弹里
 	bindSprite(pNormalBullet, QS::Kind::kMonster, QS::BulletShape::kRectangle);
 
-	setSpeed(3);
+	setBulletSpeed(3);
 
+	setDamage(3);
 	m_isArrive = false;
 
 	return true;

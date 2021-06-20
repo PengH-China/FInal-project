@@ -63,6 +63,7 @@ void Weapon::interact()
 {
 	auto floorWeapon = pHero->getMainWeapon();
 	auto bulletCount = pHero->getMainWeapon()->getBulletCount();
+	auto bulletCountMax = pHero->getMainWeapon()->getBulletCountMax();
 	//没有立即add又想使用，则要retain()
 	floorWeapon->retain();
 	floorWeapon->removeFromParent();
@@ -71,24 +72,27 @@ void Weapon::interact()
 	//pHero->getParent()->addChild(floorWeapon,2);
 	if (QS::Name::kShotgunWeapon == floorWeapon->getWeaponName()) {
 		auto pNewWeapon = ShotGun::create();
-		this->getParent()->addChild(pNewWeapon);
+		this->getParent()->addChild(pNewWeapon, QS::kFloorGunPriority);
 		pNewWeapon->setPosition(this->getPosition());
-		pNewWeapon->setScale(2.0f);
+		pNewWeapon->setScale(1.0f);
 		pNewWeapon->setBulletCount(bulletCount);
+		pNewWeapon->setBulletCountMax(bulletCountMax);
 	}
 	else if (QS::Name::kNormalGunWeapon == floorWeapon->getWeaponName()) {
 		auto pNewWeapon = NormalGun::create();
-		this->getParent()->addChild(pNewWeapon);
+		this->getParent()->addChild(pNewWeapon, QS::kFloorGunPriority);
 		pNewWeapon->setPosition(this->getPosition());
-		pNewWeapon->setScale(2.0f);
+		pNewWeapon->setScale(1.0f);
 		pNewWeapon->setBulletCount(bulletCount);
+		pNewWeapon->setBulletCountMax(bulletCountMax);
 	}
 	else if (QS::Name::kSwordWeapon == floorWeapon->getWeaponName()) {
 		auto pNewWeapon = Sword::create();
-		this->getParent()->addChild(pNewWeapon);
+		this->getParent()->addChild(pNewWeapon, QS::kFloorGunPriority);
 		pNewWeapon->setPosition(this->getPosition());
-		pNewWeapon->setScale(2.0f);
+		pNewWeapon->setScale(1.0f);
 		pNewWeapon->setBulletCount(bulletCount);
+		pNewWeapon->setBulletCountMax(bulletCountMax);
 	}
 	this->retain();
 	this->removeFromParent();
